@@ -1,0 +1,14 @@
+model Activity {
+    year        Int
+    month       Int
+    day         Int
+    habit       Habit   @relation(fields: [habitId], references: [id])
+    user        User    @relation(fields: [userId], references: [id])
+    isDisplayed Boolean @default(true) @map("is_displayed")
+
+    userId  Int @map("user_id")
+    habitId Int @map("habit_id")
+
+    @@id([year, month, day, habitId])
+    @@map("activties")
+}

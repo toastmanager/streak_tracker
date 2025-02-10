@@ -1,0 +1,52 @@
+name: app
+description: "Boilerplate"
+publish_to: "none"
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.6.0
+
+dependencies:
+  auto_route: ^9.2.2
+  cached_network_image: ^3.4.1
+  cookie_jar: ^4.0.8
+  cupertino_icons: ^1.0.8
+  dio: ^5.7.0
+  dio_cookie_manager: ^3.1.1
+  flutter:
+    sdk: flutter
+  flutter_bloc: ^9.0.0
+  flutter_dotenv: ^5.2.1
+  flutter_form_builder: ^9.7.0
+  flutter_localizations:
+    sdk: flutter
+  flutter_tabler_icons: ^1.43.0
+  form_builder_validators: ^11.1.1
+  freezed_annotation: ^2.4.4
+  get_it: ^8.0.3
+  google_fonts: ^6.2.1
+  injectable: ^2.5.0
+  intl: any
+  json_annotation: ^4.9.0
+  logger: ^2.5.0
+  retrofit: ^4.4.2
+  shared_preferences: ^2.3.5
+  skeletonizer: ^1.4.2
+
+dev_dependencies:
+  auto_route_generator: ^9.0.0
+  build_runner: ^2.4.14
+  flutter_lints: ^5.0.0
+  flutter_test:
+    sdk: flutter
+  freezed: ^2.5.7
+  injectable_generator: ^2.6.2
+  json_serializable: ^6.9.0
+  pubspec_dependency_sorter: ^1.0.5
+  retrofit_generator: ^9.1.7
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - .env

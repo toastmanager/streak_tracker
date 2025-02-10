@@ -1,0 +1,15 @@
+model Habit {
+    id Int @id @default(autoincrement())
+
+    name       String
+    maxGapDays Int    @default(0) @map("max_gap_days")
+
+    user       User       @relation(fields: [userId], references: [id])
+    userId     Int        @map("user_id")
+    activities Activity[]
+
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    @@map("habits")
+}
