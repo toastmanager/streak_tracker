@@ -1,6 +1,7 @@
 import 'package:app/core/constants/env_constants.dart';
 import 'package:app/features/auth/data/datasources/remote/auth_token_data_source.dart';
 import 'package:app/injection.dart';
+import 'package:app/main.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
@@ -74,7 +75,8 @@ class DioAuthInterceptor extends Interceptor {
 @module
 abstract class NetworkModule {
   @lazySingleton
-  PersistCookieJar get persistCookieJar => PersistCookieJar();
+  PersistCookieJar get persistCookieJar =>
+      PersistCookieJar(storage: FileStorage(appDocPath));
 
   @lazySingleton
   Dio get dio => Dio(BaseOptions(baseUrl: '${EnvConstants.apiBaseUrl}/api/v1'))

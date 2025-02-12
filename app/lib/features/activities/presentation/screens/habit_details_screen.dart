@@ -14,131 +14,129 @@ import 'package:intl/intl.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 @RoutePage()
-class ActivityDetailsScreen extends StatefulWidget {
+class ActivityDetailsScreen extends StatelessWidget {
   const ActivityDetailsScreen({super.key, required this.id});
 
   final int id;
 
   @override
-  State<ActivityDetailsScreen> createState() => _ActivityDetailsScreenState();
-}
-
-class _ActivityDetailsScreenState extends State<ActivityDetailsScreen> {
-  final titleController = TextEditingController();
-  final maxGapDaysController = TextEditingController();
-  late Habit habit = Habit(id: widget.id, name: "", maxGapDays: 0);
-  bool isHabitDetailsEnabled = true;
-
-  void switchTodayActivity() async {
-    setState(() {
-      habit = habit.copyWith(
-        isDoneToday: !habit.isDoneToday,
-      );
-    });
-    await sl<HabitsRepository>().switchTodayActivity(id: widget.id);
-  }
-
-  @override
   Widget build(BuildContext context) {
     final colors = ColorScheme.of(context);
     final textTheme = TextTheme.of(context);
+    final titleController = TextEditingController();
+    final maxGapDaysController = TextEditingController();
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Детали"),
-        actions: [
-          IconButton(
-            onPressed: () {
-              showModalBottomSheet(
-                context: context,
-                isScrollControlled: true,
-                builder: (context) => StatefulBuilder(
-                  builder: (context, setModalState) {
-                    return HabitFormScreen(
-                      title: 'Обновление привычки',
-                      enabled: isHabitDetailsEnabled,
-                      titleController: titleController,
-                      maxGapDaysController: maxGapDaysController,
-                      onCancel: () {
-                        Navigator.pop(context);
-                      },
-                      onConfirm: () async {
-                        setModalState(() => isHabitDetailsEnabled = false);
-                        final updatedHabit = Habit(
-                          id: widget.id,
-                          name: titleController.text,
-                          maxGapDays: int.parse(maxGapDaysController.text),
-                        );
-                        await sl<HabitsRepository>().updateHabit(
-                          id: widget.id,
-                          form: HabitFormEntity(
-                            name: titleController.text,
-                            maxGapDays: int.parse(maxGapDaysController.text),
-                          ),
-                        );
-                        setState(() => habit = updatedHabit);
-                        if (context.mounted) {
-                          context.read<HabitsCubit>().getHabits();
-                          setState(() {
-                            isHabitDetailsEnabled = true;
-                          });
-                          Navigator.pop(context);
-                        }
-                      },
-                    );
-                  },
-                ),
-              );
-            },
-            icon: Icon(TablerIcons.edit),
-          ),
-          IconButton(
-            onPressed: () {
-              showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                        title: Text('Вы уверены что хотите удалить привыку?'),
-                        actions: [
-                          TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
+    return FutureBuilder<Habit>(
+        future: sl<HabitsRepository>().getHabit(id: id),
+        builder: (context, snapshot) {
+          Habit habit = snapshot.data ?? Habit(id: id, name: "", maxGapDays: 0);
+          titleController.text = habit.name;
+          maxGapDaysController.text = habit.maxGapDays.toString();
+          bool isHabitDetailsEnabled = true;
+
+          return StatefulBuilder(builder: (context, setState) {
+            void switchTodayActivity() async {
+              setState(() {
+                habit = habit.copyWith(
+                    isDoneToday: !habit.isDoneToday,
+                    streak: habit.isDoneToday
+                        ? habit.streak - 1
+                        : habit.streak + 1);
+              });
+              await sl<HabitsRepository>().switchTodayActivity(id: id);
+              if (context.mounted) {
+                context.read<HabitsCubit>().getHabits();
+              }
+            }
+
+            return Scaffold(
+              appBar: AppBar(
+                title: Text("Детали"),
+                actions: [
+                  IconButton(
+                    onPressed: () {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        builder: (context) => StatefulBuilder(
+                          builder: (context, setModalState) {
+                            return HabitFormScreen(
+                              title: 'Обновление привычки',
+                              enabled: isHabitDetailsEnabled,
+                              titleController: titleController,
+                              maxGapDaysController: maxGapDaysController,
+                              onCancel: () {
+                                Navigator.pop(context);
                               },
-                              child: Text('Отмена')),
-                          TextButton(
-                              onPressed: () {
-                                context
-                                    .read<HabitsCubit>()
-                                    .deleteHabit(id: widget.id);
-                                Navigator.of(context).pop();
-                                Navigator.of(context).pop();
+                              onConfirm: () async {
+                                setModalState(
+                                    () => isHabitDetailsEnabled = false);
+                                final updatedHabit =
+                                    await sl<HabitsRepository>().updateHabit(
+                                  id: id,
+                                  form: HabitFormEntity(
+                                    name: titleController.text,
+                                    maxGapDays:
+                                        int.parse(maxGapDaysController.text),
+                                  ),
+                                );
+                                if (context.mounted) {
+                                  context.read<HabitsCubit>().getHabits();
+                                  setState(() => habit = updatedHabit);
+                                  setModalState(() {
+                                    isHabitDetailsEnabled = true;
+                                  });
+                                  Navigator.pop(context);
+                                }
                               },
-                              child: Text(
-                                'Удалить',
-                                style: textTheme.bodyMedium?.copyWith(
-                                  color: colors.error,
-                                ),
-                              )),
-                        ],
-                      ));
-            },
-            icon: Icon(TablerIcons.trash),
-          ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: switchTodayActivity,
-        child: Icon(habit.isDoneToday ? Icons.close_rounded : Icons.done),
-      ),
-      body: SafeArea(
-        child: FutureBuilder<Habit>(
-            future: sl<HabitsRepository>().getHabit(id: widget.id),
-            builder: (context, snapshot) {
-              switch (snapshot.connectionState) {
-                case ConnectionState.waiting:
-                  return Skeletonizer(
-                    child: HabitDetailsContent(habit: habit, id: 0),
-                  );
-                default:
+                            );
+                          },
+                        ),
+                      );
+                    },
+                    icon: Icon(TablerIcons.edit),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                                title: Text(
+                                    'Вы уверены что хотите удалить привыку?'),
+                                actions: [
+                                  TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text('Отмена')),
+                                  TextButton(
+                                      onPressed: () {
+                                        context
+                                            .read<HabitsCubit>()
+                                            .deleteHabit(id: id);
+                                        Navigator.of(context).pop();
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text(
+                                        'Удалить',
+                                        style: textTheme.bodyMedium?.copyWith(
+                                          color: colors.error,
+                                        ),
+                                      )),
+                                ],
+                              ));
+                    },
+                    icon: Icon(TablerIcons.trash),
+                  ),
+                ],
+              ),
+              floatingActionButton: FloatingActionButton(
+                onPressed: switchTodayActivity,
+                child:
+                    Icon(habit.isDoneToday ? Icons.close_rounded : Icons.done),
+              ),
+              body: SafeArea(
+                child: Builder(builder: (context) {
                   if (snapshot.hasError) {
                     return Center(
                       child: Text(
@@ -149,50 +147,40 @@ class _ActivityDetailsScreenState extends State<ActivityDetailsScreen> {
                       ),
                     );
                   }
-                  if (snapshot.hasData) {
-                    habit = snapshot.data!;
-                    titleController.text = habit.name;
-                    maxGapDaysController.text = habit.maxGapDays.toString();
-                    return HabitDetailsContent(habit: habit, id: widget.id);
+                  if (snapshot.connectionState == ConnectionState.waiting ||
+                      snapshot.hasData) {
+                    return Skeletonizer(
+                      enabled:
+                          snapshot.connectionState == ConnectionState.waiting,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 20,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ActivityCard(
+                              habit: habit,
+                            ),
+                            const SizedBox(height: 12),
+                            ActivityCalendar(
+                              id: id,
+                              isDoneToday: habit.isDoneToday,
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
                   }
                   return Center(
-                      child: Text('Непредвиденная ошибка на стороне клиента'));
-              }
-            }),
-      ),
-    );
-  }
-}
-
-class HabitDetailsContent extends StatelessWidget {
-  const HabitDetailsContent({
-    super.key,
-    required this.habit,
-    required this.id,
-  });
-
-  final Habit habit;
-  final int id;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 16,
-        vertical: 20,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ActivityCard(
-            name: habit.name,
-            streak: habit.streak,
-          ),
-          const SizedBox(height: 12),
-          ActivityCalendar(id: id),
-        ],
-      ),
-    );
+                    child: Text('Непредвиденная ошибка на стороне клиента'),
+                  );
+                }),
+              ),
+            );
+          });
+        });
   }
 }
 
@@ -200,15 +188,18 @@ class ActivityCalendar extends StatefulWidget {
   const ActivityCalendar({
     super.key,
     required this.id,
+    this.isDoneToday = false,
   });
 
   final int id;
+  final bool isDoneToday;
 
   @override
   State<ActivityCalendar> createState() => _ActivityCalendarState();
 }
 
 class _ActivityCalendarState extends State<ActivityCalendar> {
+  DateTime today = DateTime.now();
   DateTime date = DateTime.now();
   int daysInMonth = 31;
   List<int> activityDays = [];
@@ -219,7 +210,7 @@ class _ActivityCalendarState extends State<ActivityCalendar> {
       daysInMonth = DateUtils.getDaysInMonth(date.year, date.month);
     });
     final newDateActivityDays = await sl<HabitsRepository>()
-        .getMonthActivity(id: widget.id, year: date.year, month: date.month);
+        .getMonthlyActivity(id: widget.id, year: date.year, month: date.month);
     if (mounted) {
       setState(() {
         activityDays = newDateActivityDays;
@@ -237,6 +228,7 @@ class _ActivityCalendarState extends State<ActivityCalendar> {
   Widget build(BuildContext context) {
     final colors = ColorScheme.of(context);
     final textTheme = TextTheme.of(context);
+    final isCurrentMonth = date.year == today.year && date.month == today.month;
 
     return Center(
       child: MouseRegion(
@@ -276,7 +268,10 @@ class _ActivityCalendarState extends State<ActivityCalendar> {
                     crossAxisSpacing: 4,
                   ),
                   itemBuilder: (context, index) => CalendarDay(
-                    color: activityDays.contains(index + 1)
+                    color: activityDays.contains(index + 1) ||
+                            (isCurrentMonth &&
+                                widget.isDoneToday &&
+                                index + 1 == today.day)
                         ? colors.primary
                         : null,
                   ),

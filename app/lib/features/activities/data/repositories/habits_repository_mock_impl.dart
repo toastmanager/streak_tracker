@@ -48,7 +48,7 @@ class HabitsRepositoryMockImpl implements HabitsRepository {
   }
 
   @override
-  Future<List<int>> getMonthActivity({
+  Future<List<int>> getMonthlyActivity({
     required int id,
     required int year,
     required int month,

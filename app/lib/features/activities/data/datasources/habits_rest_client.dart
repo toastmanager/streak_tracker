@@ -25,4 +25,17 @@ abstract class HabitsRestClient {
 
   @DELETE('/$prefix/{id}')
   Future<void> delete(@Path("id") int id);
+
+  @GET('/$prefix/{id}/activities/{year}/{month}')
+  Future<List<int>> getMonthlyActivity(
+      @Path("id") int id, @Path("year") int year, @Path("month") int month);
+
+  @PUT('/$prefix/{id}/activities/today')
+  Future<String> switchTodayActivity(@Path("id") int id);
+
+  @POST('/$prefix/{id}/activities/today')
+  Future<void> addTodayActivity(@Path("id") int id);
+
+  @DELETE('/$prefix/{id}/activities/today')
+  Future<void> removeTodayActivity(@Path("id") int id);
 }

@@ -54,25 +54,25 @@ extension GetItInjectableX on _i174.GetIt {
       environment,
       environmentFilter,
     );
-    final authRestClientModule = _$AuthRestClientModule();
     final habitsRestClientModule = _$HabitsRestClientModule();
-    final loggerModule = _$LoggerModule();
-    final networkModule = _$NetworkModule();
+    final authRestClientModule = _$AuthRestClientModule();
     final injectionModule = _$InjectionModule();
-    gh.factory<_i475.AuthRestClient>(() => authRestClientModule.authRestClient);
+    final networkModule = _$NetworkModule();
+    final loggerModule = _$LoggerModule();
     gh.factory<_i719.HabitsRestClient>(
         () => habitsRestClientModule.habitsRestClient);
+    gh.factory<_i475.AuthRestClient>(() => authRestClientModule.authRestClient);
     gh.singleton<_i66.AppRouter>(() => _i66.AppRouter());
-    gh.lazySingleton<_i974.Logger>(() => loggerModule.logger);
-    gh.lazySingleton<_i557.PersistCookieJar>(
-        () => networkModule.persistCookieJar);
-    gh.lazySingleton<_i361.Dio>(() => networkModule.dio);
     await gh.lazySingletonAsync<_i460.SharedPreferences>(
       () => injectionModule.prefs,
       preResolve: true,
     );
-    gh.lazySingleton<_i390.LoginCubit>(() => _i390.LoginCubit());
+    gh.lazySingleton<_i557.PersistCookieJar>(
+        () => networkModule.persistCookieJar);
+    gh.lazySingleton<_i361.Dio>(() => networkModule.dio);
+    gh.lazySingleton<_i974.Logger>(() => loggerModule.logger);
     gh.lazySingleton<_i73.RegistrationCubit>(() => _i73.RegistrationCubit());
+    gh.lazySingleton<_i390.LoginCubit>(() => _i390.LoginCubit());
     gh.singleton<_i721.AuthTokenService>(() => _i721.AuthTokenServiceImpl());
     gh.factory<_i804.HabitsRepository>(() => _i767.HabitsRepositoryImpl(
         habitsRestClient: gh<_i719.HabitsRestClient>()));
@@ -107,12 +107,12 @@ extension GetItInjectableX on _i174.GetIt {
   }
 }
 
-class _$AuthRestClientModule extends _i533.AuthRestClientModule {}
-
 class _$HabitsRestClientModule extends _i944.HabitsRestClientModule {}
 
-class _$LoggerModule extends _i1019.LoggerModule {}
+class _$AuthRestClientModule extends _i533.AuthRestClientModule {}
+
+class _$InjectionModule extends _i1007.InjectionModule {}
 
 class _$NetworkModule extends _i401.NetworkModule {}
 
-class _$InjectionModule extends _i1007.InjectionModule {}
+class _$LoggerModule extends _i1019.LoggerModule {}

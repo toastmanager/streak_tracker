@@ -8,10 +8,10 @@ import 'package:flutter/material.dart';
 class HabitCardsListView extends StatelessWidget {
   const HabitCardsListView({
     super.key,
-    required this.activities,
+    required this.habits,
   });
 
-  final List<Habit> activities;
+  final List<Habit> habits;
 
   @override
   Widget build(BuildContext context) {
@@ -21,16 +21,15 @@ class HabitCardsListView extends StatelessWidget {
         vertical: 20,
       ),
       itemBuilder: (context, index) {
-        final currentActivity = activities[index];
+        final currentHabit = habits[index];
         return ActivityCard(
-          name: currentActivity.name,
-          streak: currentActivity.streak,
-          onTap: () => sl<AppRouter>()
-              .push(ActivityDetailsRoute(id: currentActivity.id)),
+          habit: currentHabit,
+          onTap: () =>
+              sl<AppRouter>().push(ActivityDetailsRoute(id: currentHabit.id)),
         );
       },
       separatorBuilder: (context, index) => SizedBox(height: 12),
-      itemCount: activities.length,
+      itemCount: habits.length,
     );
   }
 }

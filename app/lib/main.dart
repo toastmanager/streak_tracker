@@ -11,9 +11,13 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
+
+String appDocPath = "";
 
 void main() async {
   await dotenv.load(fileName: ".env");
+  appDocPath = (await getApplicationDocumentsDirectory()).path;
   await configureDependencies();
   await initializeDateFormatting('ru_RU');
   Intl.defaultLocale = 'ru_RU';

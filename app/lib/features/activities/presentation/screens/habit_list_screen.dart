@@ -18,9 +18,9 @@ class ActivityListScreen extends StatelessWidget {
     return BlocBuilder<HabitsCubit, HabitsState>(
       builder: (context, state) {
         return state.when(
-          loaded: (activities) => HabitCardsListView(activities: activities),
-          loading: () => Skeletonizer(
-              child: HabitCardsListView(activities: mockActivities)),
+          loaded: (activities) => HabitCardsListView(habits: activities),
+          loading: () =>
+              Skeletonizer(child: HabitCardsListView(habits: mockActivities)),
           initial: () => Center(
             child: Text('Непредвиденная ошибка на стороне клиента'),
           ),

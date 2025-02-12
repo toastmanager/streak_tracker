@@ -14,7 +14,7 @@ abstract class HabitsRepository {
     required int id,
   });
   Future<Habit> createHabit({required HabitFormEntity form});
-  Future<List<int>> getMonthActivity({
+  Future<List<int>> getMonthlyActivity({
     required int id,
     required int year,
     required int month,

@@ -14,7 +14,8 @@ class HabitsRepositoryImpl implements HabitsRepository {
 
   @override
   Future<Habit> createHabit({required HabitFormEntity form}) async {
-    return await habitsRestClient.create(form);
+    final habit = await habitsRestClient.create(form);
+    return habit;
   }
 
   @override
@@ -25,30 +26,34 @@ class HabitsRepositoryImpl implements HabitsRepository {
 
   @override
   Future<Habit> getHabit({required int id}) async {
-    return await habitsRestClient.getById(id);
+    final habit = await habitsRestClient.getById(id);
+    return habit;
   }
 
   @override
   Future<List<Habit>> getHabits() async {
-    return await habitsRestClient.getAll();
+    final habits = await habitsRestClient.getAll();
+    return habits;
   }
 
   @override
-  Future<List<int>> getMonthActivity(
-      {required int id, required int year, required int month}) {
-    // TODO: implement getMonthActivity
-    throw UnimplementedError();
+  Future<List<int>> getMonthlyActivity(
+      {required int id, required int year, required int month}) async {
+    final activities =
+        await habitsRestClient.getMonthlyActivity(id, year, month);
+    return activities;
   }
 
   @override
-  Future<bool> switchTodayActivity({required int id}) {
-    // TODO: implement switchTodayActivity
-    throw UnimplementedError();
+  Future<bool> switchTodayActivity({required int id}) async {
+    final isDoneToday = await habitsRestClient.switchTodayActivity(id);
+    return isDoneToday == "true";
   }
 
   @override
   Future<Habit> updateHabit(
       {required int id, required HabitFormEntity form}) async {
-    return await habitsRestClient.updateOne(id, form);
+    final updatedHabit = await habitsRestClient.updateOne(id, form);
+    return updatedHabit;
   }
 }
