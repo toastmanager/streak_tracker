@@ -1,4 +1,3 @@
-// dart format width=80
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 // **************************************************************************
@@ -9,11 +8,13 @@
 // coverage:ignore-file
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:app/features/activities/presentation/screens/habit_details_screen.dart'
+import 'package:app/features/auth/presentation/screens/profile_screen.dart'
+    as _i4;
+import 'package:app/features/habits/presentation/screens/habit_details_screen.dart'
     as _i1;
-import 'package:app/features/activities/presentation/screens/habit_list_screen.dart'
+import 'package:app/features/habits/presentation/screens/habit_list_screen.dart'
     as _i2;
-import 'package:app/features/auth/presentation/pages/profile_page.dart' as _i4;
+import 'package:app/generated_code/rest_api.models.swagger.dart' as _i7;
 import 'package:app/main_screen.dart' as _i3;
 import 'package:auto_route/auto_route.dart' as _i5;
 import 'package:flutter/material.dart' as _i6;
@@ -26,10 +27,13 @@ class ActivityDetailsRoute extends _i5.PageRouteInfo<ActivityDetailsRouteArgs> {
     required int id,
     List<_i5.PageRouteInfo>? children,
   }) : super(
-         ActivityDetailsRoute.name,
-         args: ActivityDetailsRouteArgs(key: key, id: id),
-         initialChildren: children,
-       );
+          ActivityDetailsRoute.name,
+          args: ActivityDetailsRouteArgs(
+            key: key,
+            id: id,
+          ),
+          initialChildren: children,
+        );
 
   static const String name = 'ActivityDetailsRoute';
 
@@ -37,13 +41,19 @@ class ActivityDetailsRoute extends _i5.PageRouteInfo<ActivityDetailsRouteArgs> {
     name,
     builder: (data) {
       final args = data.argsAs<ActivityDetailsRouteArgs>();
-      return _i1.ActivityDetailsScreen(key: args.key, id: args.id);
+      return _i1.ActivityDetailsScreen(
+        key: args.key,
+        id: args.id,
+      );
     },
   );
 }
 
 class ActivityDetailsRouteArgs {
-  const ActivityDetailsRouteArgs({this.key, required this.id});
+  const ActivityDetailsRouteArgs({
+    this.key,
+    required this.id,
+  });
 
   final _i6.Key? key;
 
@@ -56,17 +66,20 @@ class ActivityDetailsRouteArgs {
 }
 
 /// generated route for
-/// [_i2.ActivityListScreen]
-class ActivityListRoute extends _i5.PageRouteInfo<void> {
-  const ActivityListRoute({List<_i5.PageRouteInfo>? children})
-    : super(ActivityListRoute.name, initialChildren: children);
+/// [_i2.HabitsListScreen]
+class HabitsListRoute extends _i5.PageRouteInfo<void> {
+  const HabitsListRoute({List<_i5.PageRouteInfo>? children})
+      : super(
+          HabitsListRoute.name,
+          initialChildren: children,
+        );
 
-  static const String name = 'ActivityListRoute';
+  static const String name = 'HabitsListRoute';
 
   static _i5.PageInfo page = _i5.PageInfo(
     name,
     builder: (data) {
-      return const _i2.ActivityListScreen();
+      return const _i2.HabitsListScreen();
     },
   );
 }
@@ -75,7 +88,10 @@ class ActivityListRoute extends _i5.PageRouteInfo<void> {
 /// [_i3.MainScreen]
 class MainRoute extends _i5.PageRouteInfo<void> {
   const MainRoute({List<_i5.PageRouteInfo>? children})
-    : super(MainRoute.name, initialChildren: children);
+      : super(
+          MainRoute.name,
+          initialChildren: children,
+        );
 
   static const String name = 'MainRoute';
 
@@ -88,17 +104,47 @@ class MainRoute extends _i5.PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [_i4.ProfilePage]
-class ProfileRoute extends _i5.PageRouteInfo<void> {
-  const ProfileRoute({List<_i5.PageRouteInfo>? children})
-    : super(ProfileRoute.name, initialChildren: children);
+/// [_i4.ProfileScreen]
+class ProfileRoute extends _i5.PageRouteInfo<ProfileRouteArgs> {
+  ProfileRoute({
+    _i6.Key? key,
+    required _i7.UserDto userDto,
+    List<_i5.PageRouteInfo>? children,
+  }) : super(
+          ProfileRoute.name,
+          args: ProfileRouteArgs(
+            key: key,
+            userDto: userDto,
+          ),
+          initialChildren: children,
+        );
 
   static const String name = 'ProfileRoute';
 
   static _i5.PageInfo page = _i5.PageInfo(
     name,
     builder: (data) {
-      return const _i4.ProfilePage();
+      final args = data.argsAs<ProfileRouteArgs>();
+      return _i4.ProfileScreen(
+        key: args.key,
+        userDto: args.userDto,
+      );
     },
   );
+}
+
+class ProfileRouteArgs {
+  const ProfileRouteArgs({
+    this.key,
+    required this.userDto,
+  });
+
+  final _i6.Key? key;
+
+  final _i7.UserDto userDto;
+
+  @override
+  String toString() {
+    return 'ProfileRouteArgs{key: $key, userDto: $userDto}';
+  }
 }

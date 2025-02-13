@@ -18,6 +18,8 @@ RUN yarn build
 
 # Removing source files
 RUN rm -rf /src
+RUN rm -rf /prisma
+RUN rm -rf /test
 
 # Running app
 ENV NODE_ENV=production

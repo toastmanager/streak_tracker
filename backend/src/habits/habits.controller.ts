@@ -19,9 +19,12 @@ import { Roles } from '../auth/decorators/roles.decorator';
 import { Role } from '@prisma/client';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOkResponse } from '@nestjs/swagger';
 import { ActivitiesService } from './activities/activities.service';
 import { HabitUtils } from './habits.utils';
+import { HabitDto } from './dto/habit.dto';
+import { TodayActivityDto } from './dto/today-activity.dto';
+import { MonthlyActivityDto } from './dto/monthly-activity.dto';
 
 @Controller('habits')
 export class HabitsController {
@@ -34,6 +37,9 @@ export class HabitsController {
   @Post()
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
+  @ApiOkResponse({
+    type: HabitDto,
+  })
   async create(@Request() req: any, @Body() createHabitDto: CreateHabitDto) {
     const { user } = req;
 
@@ -55,6 +61,10 @@ export class HabitsController {
   @Roles(Role.MODERATOR)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiBearerAuth()
+  @ApiOkResponse({
+    type: HabitDto,
+    isArray: true,
+  })
   async findAll() {
     const habits = await this.habitsService.findMany({
       orderBy: {
@@ -68,6 +78,10 @@ export class HabitsController {
   @Get('users/me')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
+  @ApiOkResponse({
+    type: HabitDto,
+    isArray: true,
+  })
   async findReqUsersAll(@Request() req: any) {
     const { user } = req;
 
@@ -84,6 +98,10 @@ export class HabitsController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiBearerAuth()
   @Get('users/:user_id')
+  @ApiOkResponse({
+    type: HabitDto,
+    isArray: true,
+  })
   async findUsersAll(@Param('user_id') userId: string) {
     const habits = await this.habitsService.findMany({
       where: {
@@ -97,6 +115,9 @@ export class HabitsController {
   }
 
   @Get(':id')
+  @ApiOkResponse({
+    type: HabitDto,
+  })
   async findOne(@Param('id') id: string) {
     const habit = await this.habitsService.findUnique({
       where: {
@@ -112,6 +133,9 @@ export class HabitsController {
   @Patch(':id')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
+  @ApiOkResponse({
+    type: HabitDto,
+  })
   async update(
     @Request() req: any,
     @Param('id') id: string,
@@ -143,6 +167,9 @@ export class HabitsController {
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
+  @ApiOkResponse({
+    type: HabitDto,
+  })
   async remove(@Request() req: any, @Param('id') id: string) {
     const { user } = req;
     const habit = await this.habitsService.findUnique({
@@ -153,11 +180,15 @@ export class HabitsController {
 
     if (habit && habit.userId == +user.sub) {
       try {
-        return this.habitsService.remove({
-          where: {
-            id: +id,
-          },
-        });
+        const removedHabit = {
+          ...this.habitUtils.getRelatedData(habit),
+          ...(await this.habitsService.remove({
+            where: {
+              id: +id,
+            },
+          })),
+        };
+        return removedHabit;
       } catch (error) {
         throw new NotFoundException();
       }
@@ -168,12 +199,15 @@ export class HabitsController {
   @Get(':id/activities/:year/:month')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
+  @ApiOkResponse({
+    type: MonthlyActivityDto,
+  })
   async getMonthActivity(
     @Request() req: any,
     @Param('id') id: string,
     @Param('year') year: string,
     @Param('month') month: string,
-  ) {
+  ): Promise<MonthlyActivityDto> {
     const activities = await this.activitiesService.findMany({
       where: {
         habitId: +id,
@@ -182,7 +216,9 @@ export class HabitsController {
         isDisplayed: true,
       },
     });
-    return activities.map((el) => el.day);
+    return {
+      activity: activities.map((el) => el.day),
+    };
   }
 
   @Get(':id/activities')
@@ -267,7 +303,13 @@ export class HabitsController {
   @Put(':id/activities/today')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  async switchTodayActivtiy(@Request() req: any, @Param('id') id: string) {
+  @ApiOkResponse({
+    type: TodayActivityDto,
+  })
+  async switchTodayActivtiy(
+    @Request() req: any,
+    @Param('id') id: string,
+  ): Promise<TodayActivityDto> {
     const { user } = req;
     const today = new Date();
     const activity = await this.activitiesService.findUnique({
@@ -299,7 +341,9 @@ export class HabitsController {
           },
         },
       });
-      return true;
+      return {
+        isDoneToday: true,
+      };
     } else {
       await this.activitiesService.remove({
         where: {
@@ -311,7 +355,9 @@ export class HabitsController {
           },
         },
       });
-      return false;
+      return {
+        isDoneToday: true,
+      };
     }
   }
 }

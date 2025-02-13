@@ -28,6 +28,9 @@ async function bootstrap() {
     `${APP_ROUTE_PREFIX}/:version/docs`,
     app,
     documentFactory,
+    {
+      jsonDocumentUrl: 'swagger/json',
+    },
   );
 
   await app.listen(process.env.PORT ?? 3000, '0.0.0.0');

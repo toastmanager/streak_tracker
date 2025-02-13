@@ -1,87 +1,112 @@
+import 'dart:async' show FutureOr;
+import 'dart:io' show HttpHeaders, HttpStatus;
+
 import 'package:app/core/constants/env_constants.dart';
-import 'package:app/features/auth/data/datasources/remote/auth_token_data_source.dart';
+import 'package:app/features/auth/data/datasources/auth_token_service.dart';
+import 'package:app/generated_code/rest_api.swagger.dart';
 import 'package:app/injection.dart';
-import 'package:app/main.dart';
-import 'package:cookie_jar/cookie_jar.dart';
-import 'package:dio/dio.dart';
-import 'package:dio_cookie_manager/dio_cookie_manager.dart';
+import 'package:chopper/chopper.dart';
 import 'package:injectable/injectable.dart';
-import 'package:logger/logger.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 @injectable
-class DioAuthInterceptor extends Interceptor {
-  final Logger logger;
-  final AuthTokenDataSource authTokenDataSource;
+class CookieInterceptor implements Interceptor {
+  final SharedPreferences prefs;
 
-  DioAuthInterceptor({
-    required this.logger,
-    required this.authTokenDataSource,
-  });
+  const CookieInterceptor({required this.prefs});
 
-  bool isRetrying = false;
+  static const String _cookieKey = "cookies";
 
   @override
-  Future<void> onRequest(
-      RequestOptions options, RequestInterceptorHandler handler) async {
-    final accessToken = authTokenDataSource.getAccessToken();
-    if (accessToken != null) {
-      options.headers['Authorization'] = "Bearer $accessToken";
+  FutureOr<Response<BodyType>> intercept<BodyType>(
+      Chain<BodyType> chain) async {
+    Request request = chain.request;
+
+    // Retrieve stored cookies and attach them to the request
+    final storedCookies = prefs.getString(_cookieKey) ?? "";
+    if (storedCookies.isNotEmpty) {
+      request = request.copyWith(
+        headers: {...request.headers, 'Cookie': storedCookies},
+      );
     }
-    return handler.next(options);
+
+    // Proceed with the request and get the response
+    final response = await chain.proceed(request);
+
+    // Extract and store cookies from the response
+    final rawCookies = response.headers['set-cookie'];
+    if (rawCookies != null) {
+      prefs.setString(_cookieKey, rawCookies);
+    }
+
+    return response;
   }
+}
+
+@injectable
+class AccessTokenInterceptor implements Interceptor {
+  final AuthTokenService authTokenService;
+
+  const AccessTokenInterceptor({required this.authTokenService});
 
   @override
-  Future<void> onError(
-      DioException err, ErrorInterceptorHandler handler) async {
-    if (err.response?.statusCode == 401) {
-      if (!isRetrying) {
-        isRetrying = true;
-        final isRetrySuccess = await refreshToken();
-        isRetrying = false;
-        if (isRetrySuccess) {
-          return handler.resolve(await retry(err.requestOptions));
-        }
-      } else {
-        isRetrying = false;
-        return handler.next(err);
+  FutureOr<Response<BodyType>> intercept<BodyType>(
+      Chain<BodyType> chain) async {
+    Request request = chain.request;
+
+    final authorizationHeader = authTokenService.getAuthorizationHeader() ?? "";
+    request = request.copyWith(
+      headers: {
+        ...request.headers,
+        HttpHeaders.authorizationHeader: authorizationHeader
+      },
+    );
+
+    return chain.proceed(request);
+  }
+}
+
+class AuthInterceptor extends Authenticator {
+  int _refreshAttempts = 0;
+
+  @override
+  FutureOr<Request?> authenticate(
+    Request request,
+    Response response, [
+    Request? originalRequest,
+  ]) async {
+    if (response.statusCode == HttpStatus.unauthorized) {
+      if (_refreshAttempts >= 1) {
+        return null;
+      }
+
+      _refreshAttempts++;
+      final String? newToken =
+          (await sl<AuthTokenService>().refresh())?.accessToken;
+
+      if (newToken != null) {
+        _refreshAttempts = 0;
       }
     }
-    return handler.next(err);
-  }
 
-  Future<bool> refreshToken() async {
-    try {
-      await authTokenDataSource.refresh();
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  Future<Response> retry(RequestOptions requestOptions) async {
-    final options = Options(
-      method: requestOptions.method,
-      headers: requestOptions.headers,
-    );
-    return sl<Dio>().request(
-      requestOptions.path,
-      options: options,
-      data: requestOptions.data,
-      queryParameters: requestOptions.queryParameters,
-    );
+    final authorizationHeader =
+        sl<AuthTokenService>().getAuthorizationHeader() ?? "";
+    request = request.copyWith(headers: {
+      ...request.headers,
+      HttpHeaders.authorizationHeader: authorizationHeader,
+    });
+    return request;
   }
 }
 
 @module
 abstract class NetworkModule {
   @lazySingleton
-  PersistCookieJar get persistCookieJar =>
-      PersistCookieJar(storage: FileStorage(appDocPath));
-
-  @lazySingleton
-  Dio get dio => Dio(BaseOptions(baseUrl: '${EnvConstants.apiBaseUrl}/api/v1'))
-    ..interceptors.addAll([
-      CookieManager(persistCookieJar),
-      sl<DioAuthInterceptor>(),
-    ]);
+  RestApi get restApi => RestApi.create(
+          baseUrl: Uri.parse(EnvConstants.apiBaseUrl),
+          authenticator: AuthInterceptor(),
+          interceptors: [
+            sl<CookieInterceptor>(),
+            sl<AccessTokenInterceptor>(),
+          ]);
 }

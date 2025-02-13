@@ -1,10 +1,8 @@
-import 'package:app/features/auth/domain/entities/login_form_entity.dart';
-import 'package:app/features/auth/domain/entities/register_form_entity.dart';
-import 'package:app/features/auth/domain/entities/user.dart';
+import 'package:app/generated_code/rest_api.swagger.dart';
 
 abstract class AuthRepository {
-  Future<User?> login(LoginFormEntity form);
-  Future<User?> register(RegisterFormEntity form);
-  Future<User?> loadMe();
+  Future<UserDto?> login(LoginDto form);
+  Future<UserDto?> register(RegisterDto form);
+  Future<UserDto?> loadMe();
   Future<void> logout();
 }
