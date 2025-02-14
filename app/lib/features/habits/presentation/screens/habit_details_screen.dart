@@ -8,6 +8,7 @@ import 'package:app/injection.dart';
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:intl/intl.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -24,6 +25,7 @@ class ActivityDetailsScreen extends StatelessWidget {
     final textTheme = TextTheme.of(context);
     final titleController = TextEditingController();
     final maxGapDaysController = TextEditingController();
+    final activityUpdateFormKey = GlobalKey<FormBuilderState>();
 
     return FutureBuilder<HabitDetailsDto>(
         future: sl<HabitsRepository>().getHabit(id: id),
@@ -66,35 +68,39 @@ class ActivityDetailsScreen extends StatelessWidget {
                         isScrollControlled: true,
                         builder: (context) => StatefulBuilder(
                           builder: (context, setModalState) {
-                            return HabitFormScreen(
-                              title: 'Обновление привычки',
-                              enabled: isHabitDetailsEnabled,
-                              titleController: titleController,
-                              maxGapDaysController: maxGapDaysController,
-                              onCancel: () {
-                                Navigator.pop(context);
-                              },
-                              onConfirm: () async {
-                                setModalState(
-                                    () => isHabitDetailsEnabled = false);
-                                final updatedHabit =
-                                    await sl<HabitsRepository>().updateHabit(
-                                  id: id,
-                                  form: UpdateHabitDto(
-                                    name: titleController.text,
-                                    maxGapDays:
-                                        int.parse(maxGapDaysController.text),
-                                  ),
-                                );
-                                if (context.mounted) {
-                                  context.read<HabitsCubit>().getHabits();
-                                  setState(() => habit = updatedHabit);
-                                  setModalState(() {
-                                    isHabitDetailsEnabled = true;
-                                  });
+                            return FormBuilder(
+                              key: activityUpdateFormKey,
+                              child: HabitFormScreen(
+                                formKey: activityUpdateFormKey,
+                                title: 'Обновление привычки',
+                                enabled: isHabitDetailsEnabled,
+                                titleController: titleController,
+                                maxGapDaysController: maxGapDaysController,
+                                onCancel: () {
                                   Navigator.pop(context);
-                                }
-                              },
+                                },
+                                onConfirm: () async {
+                                  setModalState(
+                                      () => isHabitDetailsEnabled = false);
+                                  final updatedHabit =
+                                      await sl<HabitsRepository>().updateHabit(
+                                    id: id,
+                                    form: UpdateHabitDto(
+                                      name: titleController.text,
+                                      maxGapDays:
+                                          int.parse(maxGapDaysController.text),
+                                    ),
+                                  );
+                                  if (context.mounted) {
+                                    context.read<HabitsCubit>().getHabits();
+                                    setState(() => habit = updatedHabit);
+                                    setModalState(() {
+                                      isHabitDetailsEnabled = true;
+                                    });
+                                    Navigator.pop(context);
+                                  }
+                                },
+                              ),
                             );
                           },
                         ),
