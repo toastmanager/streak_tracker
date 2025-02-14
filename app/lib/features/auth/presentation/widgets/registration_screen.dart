@@ -92,7 +92,7 @@ class _RegistrationScreenState extends State<RegistrationScreen>
                 SizedBox(height: 12),
                 ExpandedHorizontally(
                   child: FilledButton(
-                    child: Text('Созать в аккаунт'),
+                    child: Text('Создать аккаунт'),
                     onPressed: () {
                       if (formKey.currentState?.saveAndValidate() ?? false) {
                         final formData = formKey.currentState!.value;
