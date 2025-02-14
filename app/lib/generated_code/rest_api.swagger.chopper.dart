@@ -241,7 +241,7 @@ final class _$RestApi extends RestApi {
   }
 
   @override
-  Future<Response<HabitDto>> _apiV1HabitsIdPatch({
+  Future<Response<HabitDetailsDto>> _apiV1HabitsIdPatch({
     required String? id,
     required UpdateHabitDto? body,
   }) {
@@ -253,7 +253,7 @@ final class _$RestApi extends RestApi {
       client.baseUrl,
       body: $body,
     );
-    return client.send<HabitDto, HabitDto>($request);
+    return client.send<HabitDetailsDto, HabitDetailsDto>($request);
   }
 
   @override

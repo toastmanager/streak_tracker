@@ -108,13 +108,13 @@ class MainRoute extends _i5.PageRouteInfo<void> {
 class ProfileRoute extends _i5.PageRouteInfo<ProfileRouteArgs> {
   ProfileRoute({
     _i6.Key? key,
-    required _i7.UserDto userDto,
+    required _i7.UserDto user,
     List<_i5.PageRouteInfo>? children,
   }) : super(
           ProfileRoute.name,
           args: ProfileRouteArgs(
             key: key,
-            userDto: userDto,
+            user: user,
           ),
           initialChildren: children,
         );
@@ -127,7 +127,7 @@ class ProfileRoute extends _i5.PageRouteInfo<ProfileRouteArgs> {
       final args = data.argsAs<ProfileRouteArgs>();
       return _i4.ProfileScreen(
         key: args.key,
-        userDto: args.userDto,
+        user: args.user,
       );
     },
   );
@@ -136,15 +136,15 @@ class ProfileRoute extends _i5.PageRouteInfo<ProfileRouteArgs> {
 class ProfileRouteArgs {
   const ProfileRouteArgs({
     this.key,
-    required this.userDto,
+    required this.user,
   });
 
   final _i6.Key? key;
 
-  final _i7.UserDto userDto;
+  final _i7.UserDto user;
 
   @override
   String toString() {
-    return 'ProfileRouteArgs{key: $key, userDto: $userDto}';
+    return 'ProfileRouteArgs{key: $key, user: $user}';
   }
 }

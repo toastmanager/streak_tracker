@@ -135,13 +135,13 @@ export class HabitsController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @ApiOkResponse({
-    type: HabitDto,
+    type: HabitDetailsDto,
   })
   async update(
     @Request() req: any,
     @Param('id') id: string,
     @Body() UpdateHabitDto: UpdateHabitDto,
-  ) {
+  ): Promise<HabitDetailsDto> {
     const { user } = req;
     const habit = await this.habitsService.findUnique({
       where: {
@@ -151,12 +151,17 @@ export class HabitsController {
 
     if (habit && habit.userId == +user.sub) {
       try {
-        return this.habitsService.update({
+        const updatedHabit = await this.habitsService.update({
           where: {
             id: +id,
           },
           data: UpdateHabitDto,
         });
+        const relatedData = await this.habitUtils.getRelatedData(updatedHabit);
+        return {
+          ...updatedHabit,
+          ...relatedData,
+        };
       } catch (error) {
         throw new NotFoundException();
       }
@@ -209,13 +214,15 @@ export class HabitsController {
     const activities = await this.activitiesService.findMany({
       where: {
         habitId: +id,
-        year: +year,
-        month: +month,
+        date: {
+          gte: new Date(+year, +month - 1),
+          lt: new Date(+year, +month),
+        },
         isDisplayed: true,
       },
     });
     return {
-      activity: activities.map((el) => el.day),
+      activity: activities.map((el) => el.date.getUTCDate()),
     };
   }
 
@@ -237,14 +244,21 @@ export class HabitsController {
   async getTodayActivtiy(@Request() req: any, @Param('id') id: string) {
     const { user } = req;
     const today = new Date();
-    const activity = await this.activitiesService.findUnique({
+    const activity = await this.activitiesService.findFirst({
       where: {
-        year_month_day_habitId: {
-          day: today.getUTCDate(),
-          month: today.getUTCMonth() + 1,
-          year: today.getUTCFullYear(),
-          habitId: +id,
+        date: {
+          gte: new Date(
+            today.getUTCFullYear(),
+            today.getUTCMonth(),
+            today.getUTCDate(),
+          ),
+          lt: new Date(
+            today.getUTCFullYear(),
+            today.getUTCMonth(),
+            today.getUTCDate() + 1,
+          ),
         },
+        habitId: +id,
       },
     });
 
@@ -259,9 +273,7 @@ export class HabitsController {
     const today = new Date();
     const _ = await this.activitiesService.create({
       data: {
-        day: today.getUTCDate(),
-        month: today.getUTCMonth() + 1,
-        year: today.getUTCFullYear(),
+        date: today,
         habit: {
           connect: {
             id: +id,
@@ -284,14 +296,29 @@ export class HabitsController {
   async removeTodayActivtiy(@Request() req: any, @Param('id') id: string) {
     const { user } = req;
     const today = new Date();
+    const activity = await this.activitiesService.findFirst({
+      where: {
+        date: {
+          gte: new Date(
+            today.getUTCFullYear(),
+            today.getUTCMonth(),
+            today.getUTCDate(),
+          ),
+          lt: new Date(
+            today.getUTCFullYear(),
+            today.getUTCMonth(),
+            today.getUTCDate() + 1,
+          ),
+        },
+        habitId: +id,
+      },
+      select: {
+        id: true,
+      },
+    });
     const _ = await this.activitiesService.remove({
       where: {
-        year_month_day_habitId: {
-          day: today.getUTCDate(),
-          month: today.getUTCMonth() + 1,
-          year: today.getUTCFullYear(),
-          habitId: +id,
-        },
+        id: activity.id,
       },
     });
 
@@ -310,51 +337,33 @@ export class HabitsController {
   ): Promise<TodayActivityDto> {
     const { user } = req;
     const today = new Date();
-    const activity = await this.activitiesService.findUnique({
+    const activity = await this.activitiesService.findFirst({
       where: {
-        year_month_day_habitId: {
-          day: today.getUTCDate(),
-          month: today.getUTCMonth() + 1,
-          year: today.getUTCFullYear(),
-          habitId: +id,
+        date: {
+          gte: new Date(
+            today.getUTCFullYear(),
+            today.getUTCMonth(),
+            today.getUTCDate(),
+          ),
+          lt: new Date(
+            today.getUTCFullYear(),
+            today.getUTCMonth(),
+            today.getUTCDate() + 1,
+          ),
         },
+        habitId: +id,
       },
     });
 
     if (!activity) {
-      await this.activitiesService.create({
-        data: {
-          day: today.getUTCDate(),
-          month: today.getUTCMonth() + 1,
-          year: today.getUTCFullYear(),
-          habit: {
-            connect: {
-              id: +id,
-            },
-          },
-          user: {
-            connect: {
-              id: +user.sub,
-            },
-          },
-        },
-      });
+      await this.addTodayActivtiy(req, id);
       return {
         isDoneToday: true,
       };
     } else {
-      await this.activitiesService.remove({
-        where: {
-          year_month_day_habitId: {
-            day: today.getUTCDate(),
-            month: today.getUTCMonth() + 1,
-            year: today.getUTCFullYear(),
-            habitId: +id,
-          },
-        },
-      });
+      await this.removeTodayActivtiy(req, id);
       return {
-        isDoneToday: true,
+        isDoneToday: false,
       };
     }
   }

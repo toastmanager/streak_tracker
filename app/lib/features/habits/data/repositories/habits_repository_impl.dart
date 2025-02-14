@@ -56,7 +56,7 @@ class HabitsRepositoryImpl implements HabitsRepository {
   }
 
   @override
-  Future<HabitDto> updateHabit(
+  Future<HabitDetailsDto> updateHabit(
       {required int id, required UpdateHabitDto form}) async {
     final updatedHabit = (await restApi.apiV1HabitsIdPatch(
       id: id.toString(),

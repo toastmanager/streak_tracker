@@ -5,7 +5,7 @@ abstract class HabitsRepository {
   Future<HabitDetailsDto> getHabit({
     required int id,
   });
-  Future<HabitDto> updateHabit({
+  Future<HabitDetailsDto> updateHabit({
     required int id,
     required UpdateHabitDto form,
   });

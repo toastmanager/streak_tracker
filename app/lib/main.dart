@@ -53,7 +53,9 @@ class MyApp extends StatelessWidget {
           seedColor: Colors.tealAccent,
           brightness: Brightness.dark,
         ),
-        textTheme: GoogleFonts.onestTextTheme().apply(bodyColor: Colors.white),
+        textTheme: GoogleFonts.onestTextTheme().apply(
+          bodyColor: Colors.white,
+        ),
         inputDecorationTheme: InputDecorationTheme(
           filled: true,
           border: OutlineInputBorder(

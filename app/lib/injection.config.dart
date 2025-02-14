@@ -38,16 +38,16 @@ extension GetItInjectableX on _i174.GetIt {
       environment,
       environmentFilter,
     );
-    final injectionModule = _$InjectionModule();
-    final networkModule = _$NetworkModule();
     final loggerModule = _$LoggerModule();
+    final networkModule = _$NetworkModule();
+    final injectionModule = _$InjectionModule();
     gh.singleton<_i66.AppRouter>(() => _i66.AppRouter());
+    gh.lazySingleton<_i974.Logger>(() => loggerModule.logger);
+    gh.lazySingleton<_i435.RestApi>(() => networkModule.restApi);
     await gh.lazySingletonAsync<_i460.SharedPreferences>(
       () => injectionModule.prefs,
       preResolve: true,
     );
-    gh.lazySingleton<_i435.RestApi>(() => networkModule.restApi);
-    gh.lazySingleton<_i974.Logger>(() => loggerModule.logger);
     gh.singleton<_i441.AuthTokenService>(
         () => _i441.AuthTokenServiceImpl(logger: gh<_i974.Logger>()));
     gh.factory<_i1025.HabitsRepository>(
@@ -71,8 +71,8 @@ extension GetItInjectableX on _i174.GetIt {
   }
 }
 
-class _$InjectionModule extends _i1007.InjectionModule {}
+class _$LoggerModule extends _i1019.LoggerModule {}
 
 class _$NetworkModule extends _i401.NetworkModule {}
 
-class _$LoggerModule extends _i1019.LoggerModule {}
+class _$InjectionModule extends _i1007.InjectionModule {}

@@ -1,4 +1,4 @@
-import 'package:app/core/components/expanded_horizontal.dart';
+import 'package:app/core/components/expanded_horizontally.dart';
 import 'package:app/features/auth/domain/cubit/auth_cubit.dart';
 import 'package:app/generated_code/rest_api.models.swagger.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

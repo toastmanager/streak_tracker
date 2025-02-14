@@ -306,11 +306,12 @@ abstract class RestApi extends ChopperService {
 
   ///
   ///@param id
-  Future<chopper.Response<HabitDto>> apiV1HabitsIdPatch({
+  Future<chopper.Response<HabitDetailsDto>> apiV1HabitsIdPatch({
     required String? id,
     required UpdateHabitDto? body,
   }) {
-    generatedMapping.putIfAbsent(HabitDto, () => HabitDto.fromJsonFactory);
+    generatedMapping.putIfAbsent(
+        HabitDetailsDto, () => HabitDetailsDto.fromJsonFactory);
 
     return _apiV1HabitsIdPatch(id: id, body: body);
   }
@@ -321,7 +322,7 @@ abstract class RestApi extends ChopperService {
     path: '/api/v1/habits/{id}',
     optionalBody: true,
   )
-  Future<chopper.Response<HabitDto>> _apiV1HabitsIdPatch({
+  Future<chopper.Response<HabitDetailsDto>> _apiV1HabitsIdPatch({
     @Path('id') required String? id,
     @Body() required UpdateHabitDto? body,
   });

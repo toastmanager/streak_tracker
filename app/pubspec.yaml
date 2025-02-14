@@ -10,7 +10,6 @@ dependencies:
   auto_route: ^9.2.2
   cached_network_image: ^3.4.1
   chopper: ^8.1.0
-  connectivity: ^3.0.6
   cookie_jar: ^4.0.8
   cupertino_icons: ^1.0.8
   flutter:

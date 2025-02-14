@@ -44,15 +44,13 @@ class ActivityDetailsScreen extends StatelessWidget {
 
           return StatefulBuilder(builder: (context, setState) {
             void switchTodayActivity() async {
-              setState(() {
-                habit = habit.copyWith(
-                    isDoneToday: !habit.isDoneToday,
-                    streak: habit.isDoneToday
-                        ? habit.streak - 1
-                        : habit.streak + 1);
-              });
-              await sl<HabitsRepository>().switchTodayActivity(id: id);
+              final isDoneToday =
+                  await sl<HabitsRepository>().switchTodayActivity(id: id);
               if (context.mounted) {
+                setState(() => habit = habit.copyWith(
+                      isDoneToday: isDoneToday,
+                      streak: isDoneToday ? habit.streak + 1 : habit.streak - 1,
+                    ));
                 context.read<HabitsCubit>().getHabits();
               }
             }
@@ -79,7 +77,7 @@ class ActivityDetailsScreen extends StatelessWidget {
                               onConfirm: () async {
                                 setModalState(
                                     () => isHabitDetailsEnabled = false);
-                                final _ =
+                                final updatedHabit =
                                     await sl<HabitsRepository>().updateHabit(
                                   id: id,
                                   form: UpdateHabitDto(
@@ -90,10 +88,7 @@ class ActivityDetailsScreen extends StatelessWidget {
                                 );
                                 if (context.mounted) {
                                   context.read<HabitsCubit>().getHabits();
-                                  setState(() => habit.copyWith(
-                                      name: titleController.text,
-                                      maxGapDays: int.parse(
-                                          maxGapDaysController.text)));
+                                  setState(() => habit = updatedHabit);
                                   setModalState(() {
                                     isHabitDetailsEnabled = true;
                                   });
@@ -279,10 +274,10 @@ class _ActivityCalendarState extends State<ActivityCalendar> {
                     crossAxisSpacing: 4,
                   ),
                   itemBuilder: (context, index) => CalendarDay(
-                    color: activityDays.contains(index + 1) ||
-                            (isCurrentMonth &&
-                                widget.isDoneToday &&
-                                index + 1 == today.day)
+                    color: activityDays.contains(index + 1) &&
+                            (!isCurrentMonth ||
+                                index + 1 != today.day ||
+                                widget.isDoneToday)
                         ? colors.primary
                         : null,
                   ),

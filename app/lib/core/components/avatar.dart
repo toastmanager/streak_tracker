@@ -16,7 +16,9 @@ class Avatar extends StatelessWidget {
     final colors = ColorScheme.of(context);
     return ClipOval(
       child: Container(
-        color: colors.surfaceDim,
+        color: colors.brightness == Brightness.dark
+            ? colors.surfaceBright
+            : colors.surfaceDim,
         width: size,
         height: size,
         child: avatarUrl != null
