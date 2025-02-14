@@ -4,6 +4,7 @@ import 'package:app/generated_code/rest_api.models.swagger.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -16,6 +17,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen>
     with AutomaticKeepAliveClientMixin {
   final formKey = GlobalKey<FormBuilderState>();
+  bool isPasswordShown = false;
 
   @override
   Widget build(BuildContext context) {
@@ -52,8 +54,17 @@ class _LoginScreenState extends State<LoginScreen>
                 SizedBox(height: 12),
                 FormBuilderTextField(
                   name: 'password',
+                  obscureText: !isPasswordShown,
                   decoration: InputDecoration(
                     label: Text('Пароль'),
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        setState(() => isPasswordShown = !isPasswordShown);
+                      },
+                      icon: Icon(isPasswordShown
+                          ? TablerIcons.eye_off
+                          : TablerIcons.eye),
+                    ),
                   ),
                   validator: FormBuilderValidators.compose([
                     FormBuilderValidators.required(),

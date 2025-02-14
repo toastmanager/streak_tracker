@@ -28,7 +28,7 @@ void main() async {
   runApp(MultiBlocProvider(
     providers: [
       BlocProvider(
-        create: (context) => sl<AuthCubit>()..loadMe(),
+        create: (context) => sl<AuthCubit>()..intialLoadMe(),
       ),
       BlocProvider(
         create: (context) => sl<HabitsCubit>()..getHabits(),

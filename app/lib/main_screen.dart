@@ -45,7 +45,6 @@ class MainScreen extends StatelessWidget {
               );
             },
           ),
-          loading: () => const Scaffold(),
           initial: () => const Scaffold(),
           orElse: () => Scaffold(
             body: SafeArea(
@@ -60,10 +59,16 @@ class MainScreen extends StatelessWidget {
                       ],
                     ),
                     Expanded(
-                      child: TabBarView(children: [
-                        LoginScreen(),
-                        RegistrationScreen(),
-                      ]),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 16,
+                        ),
+                        child: TabBarView(children: [
+                          Center(child: LoginScreen()),
+                          Center(child: RegistrationScreen()),
+                        ]),
+                      ),
                     ),
                   ],
                 ),

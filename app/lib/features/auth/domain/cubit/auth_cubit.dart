@@ -16,9 +16,8 @@ class AuthCubit extends Cubit<AuthState> {
   AuthCubit({required this.authRepository, required this.logger})
       : super(AuthState.initial());
 
-  Future<void> loadMe() async {
+  Future<void> intialLoadMe() async {
     try {
-      emit(AuthState.loading());
       final user = await authRepository.loadMe();
       if (user == null) {
         throw Exception('Не удалось загрузить пользователя');
@@ -27,6 +26,11 @@ class AuthCubit extends Cubit<AuthState> {
     } catch (e) {
       emit(AuthState.unauthorized());
     }
+  }
+
+  Future<void> loadMe() async {
+    emit(AuthState.loading());
+    await intialLoadMe();
   }
 
   Future<void> login({required LoginDto form}) async {

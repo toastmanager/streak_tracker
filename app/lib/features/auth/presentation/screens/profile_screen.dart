@@ -98,9 +98,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   children: [
                     TextButton(
                       onPressed: () {
-                        if (!isEditing) {
+                        if (isEditing) {
+                          cancelChanges();
+                        } else {
                           showLogoutAlert(context);
-                        } else {}
+                        }
                       },
                       child: Text(
                         isEditing ? 'Отмена' : 'Выйти',
