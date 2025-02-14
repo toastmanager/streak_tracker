@@ -23,7 +23,7 @@ class HabitsListScreen extends StatelessWidget {
               child: HabitCardsListView(
                   habits: List.filled(
                       6,
-                      HabitDto(
+                      HabitDetailsDto(
                         id: 0,
                         isDoneToday: false,
                         maxGapDays: 0,

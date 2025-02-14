@@ -5,7 +5,7 @@ class HabitsState with _$HabitsState {
   const factory HabitsState.initial() = _Initial;
   const factory HabitsState.loading() = _Loading;
   const factory HabitsState.loaded({
-    required List<HabitDto> habits,
+    required List<HabitDetailsDto> habits,
   }) = _Loaded;
   const factory HabitsState.error({
     required String message,

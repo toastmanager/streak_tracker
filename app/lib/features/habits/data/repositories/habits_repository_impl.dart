@@ -25,13 +25,13 @@ class HabitsRepositoryImpl implements HabitsRepository {
   }
 
   @override
-  Future<HabitDto> getHabit({required int id}) async {
+  Future<HabitDetailsDto> getHabit({required int id}) async {
     final habit = (await restApi.apiV1HabitsIdGet(id: id.toString())).body;
     return habit!;
   }
 
   @override
-  Future<List<HabitDto>> getHabits() async {
+  Future<List<HabitDetailsDto>> getHabits() async {
     final habits = (await restApi.apiV1HabitsUsersMeGet()).body;
     return habits!;
   }
@@ -39,13 +39,13 @@ class HabitsRepositoryImpl implements HabitsRepository {
   @override
   Future<List<int>> getMonthlyActivity(
       {required int id, required int year, required int month}) async {
-    final activities = (await restApi.apiV1HabitsIdActivitiesYearMonthGet(
+    final activity = (await restApi.apiV1HabitsIdActivitiesYearMonthGet(
       id: id.toString(),
       year: year.toString(),
       month: month.toString(),
     ))
         .body;
-    return activities?.activity ?? [];
+    return activity?.activity ?? [];
   }
 
   @override

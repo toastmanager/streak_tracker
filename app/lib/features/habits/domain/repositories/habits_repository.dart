@@ -1,8 +1,8 @@
 import 'package:app/generated_code/rest_api.models.swagger.dart';
 
 abstract class HabitsRepository {
-  Future<List<HabitDto>> getHabits();
-  Future<HabitDto> getHabit({
+  Future<List<HabitDetailsDto>> getHabits();
+  Future<HabitDetailsDto> getHabit({
     required int id,
   });
   Future<HabitDto> updateHabit({

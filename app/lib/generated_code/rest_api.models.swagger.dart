@@ -553,8 +553,6 @@ class HabitDto {
     required this.id,
     required this.name,
     required this.maxGapDays,
-    required this.streak,
-    required this.isDoneToday,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -571,10 +569,6 @@ class HabitDto {
   final String name;
   @JsonKey(name: 'maxGapDays')
   final int maxGapDays;
-  @JsonKey(name: 'streak')
-  final int streak;
-  @JsonKey(name: 'isDoneToday')
-  final bool isDoneToday;
   @JsonKey(name: 'createdAt')
   final DateTime createdAt;
   @JsonKey(name: 'updatedAt')
@@ -592,11 +586,6 @@ class HabitDto {
             (identical(other.maxGapDays, maxGapDays) ||
                 const DeepCollectionEquality()
                     .equals(other.maxGapDays, maxGapDays)) &&
-            (identical(other.streak, streak) ||
-                const DeepCollectionEquality().equals(other.streak, streak)) &&
-            (identical(other.isDoneToday, isDoneToday) ||
-                const DeepCollectionEquality()
-                    .equals(other.isDoneToday, isDoneToday)) &&
             (identical(other.createdAt, createdAt) ||
                 const DeepCollectionEquality()
                     .equals(other.createdAt, createdAt)) &&
@@ -613,8 +602,6 @@ class HabitDto {
       const DeepCollectionEquality().hash(id) ^
       const DeepCollectionEquality().hash(name) ^
       const DeepCollectionEquality().hash(maxGapDays) ^
-      const DeepCollectionEquality().hash(streak) ^
-      const DeepCollectionEquality().hash(isDoneToday) ^
       const DeepCollectionEquality().hash(createdAt) ^
       const DeepCollectionEquality().hash(updatedAt) ^
       runtimeType.hashCode;
@@ -625,16 +612,12 @@ extension $HabitDtoExtension on HabitDto {
       {int? id,
       String? name,
       int? maxGapDays,
-      int? streak,
-      bool? isDoneToday,
       DateTime? createdAt,
       DateTime? updatedAt}) {
     return HabitDto(
         id: id ?? this.id,
         name: name ?? this.name,
         maxGapDays: maxGapDays ?? this.maxGapDays,
-        streak: streak ?? this.streak,
-        isDoneToday: isDoneToday ?? this.isDoneToday,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt);
   }
@@ -643,19 +626,126 @@ extension $HabitDtoExtension on HabitDto {
       {Wrapped<int>? id,
       Wrapped<String>? name,
       Wrapped<int>? maxGapDays,
-      Wrapped<int>? streak,
-      Wrapped<bool>? isDoneToday,
       Wrapped<DateTime>? createdAt,
       Wrapped<DateTime>? updatedAt}) {
     return HabitDto(
         id: (id != null ? id.value : this.id),
         name: (name != null ? name.value : this.name),
         maxGapDays: (maxGapDays != null ? maxGapDays.value : this.maxGapDays),
-        streak: (streak != null ? streak.value : this.streak),
-        isDoneToday:
-            (isDoneToday != null ? isDoneToday.value : this.isDoneToday),
         createdAt: (createdAt != null ? createdAt.value : this.createdAt),
         updatedAt: (updatedAt != null ? updatedAt.value : this.updatedAt));
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
+class HabitDetailsDto {
+  const HabitDetailsDto({
+    required this.id,
+    required this.name,
+    required this.maxGapDays,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.streak,
+    required this.isDoneToday,
+  });
+
+  factory HabitDetailsDto.fromJson(Map<String, dynamic> json) =>
+      _$HabitDetailsDtoFromJson(json);
+
+  static const toJsonFactory = _$HabitDetailsDtoToJson;
+  Map<String, dynamic> toJson() => _$HabitDetailsDtoToJson(this);
+
+  @JsonKey(name: 'id')
+  final int id;
+  @JsonKey(name: 'name')
+  final String name;
+  @JsonKey(name: 'maxGapDays')
+  final int maxGapDays;
+  @JsonKey(name: 'createdAt')
+  final DateTime createdAt;
+  @JsonKey(name: 'updatedAt')
+  final DateTime updatedAt;
+  @JsonKey(name: 'streak')
+  final int streak;
+  @JsonKey(name: 'isDoneToday')
+  final bool isDoneToday;
+  static const fromJsonFactory = _$HabitDetailsDtoFromJson;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other is HabitDetailsDto &&
+            (identical(other.id, id) ||
+                const DeepCollectionEquality().equals(other.id, id)) &&
+            (identical(other.name, name) ||
+                const DeepCollectionEquality().equals(other.name, name)) &&
+            (identical(other.maxGapDays, maxGapDays) ||
+                const DeepCollectionEquality()
+                    .equals(other.maxGapDays, maxGapDays)) &&
+            (identical(other.createdAt, createdAt) ||
+                const DeepCollectionEquality()
+                    .equals(other.createdAt, createdAt)) &&
+            (identical(other.updatedAt, updatedAt) ||
+                const DeepCollectionEquality()
+                    .equals(other.updatedAt, updatedAt)) &&
+            (identical(other.streak, streak) ||
+                const DeepCollectionEquality().equals(other.streak, streak)) &&
+            (identical(other.isDoneToday, isDoneToday) ||
+                const DeepCollectionEquality()
+                    .equals(other.isDoneToday, isDoneToday)));
+  }
+
+  @override
+  String toString() => jsonEncode(this);
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(id) ^
+      const DeepCollectionEquality().hash(name) ^
+      const DeepCollectionEquality().hash(maxGapDays) ^
+      const DeepCollectionEquality().hash(createdAt) ^
+      const DeepCollectionEquality().hash(updatedAt) ^
+      const DeepCollectionEquality().hash(streak) ^
+      const DeepCollectionEquality().hash(isDoneToday) ^
+      runtimeType.hashCode;
+}
+
+extension $HabitDetailsDtoExtension on HabitDetailsDto {
+  HabitDetailsDto copyWith(
+      {int? id,
+      String? name,
+      int? maxGapDays,
+      DateTime? createdAt,
+      DateTime? updatedAt,
+      int? streak,
+      bool? isDoneToday}) {
+    return HabitDetailsDto(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        maxGapDays: maxGapDays ?? this.maxGapDays,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        streak: streak ?? this.streak,
+        isDoneToday: isDoneToday ?? this.isDoneToday);
+  }
+
+  HabitDetailsDto copyWithWrapped(
+      {Wrapped<int>? id,
+      Wrapped<String>? name,
+      Wrapped<int>? maxGapDays,
+      Wrapped<DateTime>? createdAt,
+      Wrapped<DateTime>? updatedAt,
+      Wrapped<int>? streak,
+      Wrapped<bool>? isDoneToday}) {
+    return HabitDetailsDto(
+        id: (id != null ? id.value : this.id),
+        name: (name != null ? name.value : this.name),
+        maxGapDays: (maxGapDays != null ? maxGapDays.value : this.maxGapDays),
+        createdAt: (createdAt != null ? createdAt.value : this.createdAt),
+        updatedAt: (updatedAt != null ? updatedAt.value : this.updatedAt),
+        streak: (streak != null ? streak.value : this.streak),
+        isDoneToday:
+            (isDoneToday != null ? isDoneToday.value : this.isDoneToday));
   }
 }
 

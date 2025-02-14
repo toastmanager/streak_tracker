@@ -37,17 +37,10 @@ class HabitsCubit extends Cubit<HabitsState> {
 
   Future<void> updateHabit(
       {required int id, required UpdateHabitDto form}) async {
-    final updatedHabit = await habitsRepository.updateHabit(id: id, form: form);
+    final _ = await habitsRepository.updateHabit(id: id, form: form);
+    final habits = await habitsRepository.getHabits();
     emit(
-      _Loaded(
-        habits: [
-          updatedHabit,
-          ...state.whenOrNull(
-                loaded: (habits) => habits.where((el) => el.id != id).toList(),
-              ) ??
-              [],
-        ],
-      ),
+      _Loaded(habits: habits),
     );
   }
 }

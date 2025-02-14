@@ -20,9 +20,7 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<UserDto?> loadMe() async {
     try {
-      print('loading me');
       final userResponse = await restApi.apiV1AuthMePost();
-      print('loaded me');
       if (userResponse.error != null) {
         throw Exception(userResponse.error);
       }

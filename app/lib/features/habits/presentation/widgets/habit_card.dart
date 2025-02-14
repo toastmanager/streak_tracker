@@ -10,7 +10,7 @@ class ActivityCard extends StatelessWidget {
   });
 
   final void Function()? onTap;
-  final HabitDto habit;
+  final HabitDetailsDto habit;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +42,7 @@ class ActivityCardContent extends StatelessWidget {
     required this.habit,
   });
 
-  final HabitDto habit;
+  final HabitDetailsDto habit;
 
   @override
   Widget build(BuildContext context) {

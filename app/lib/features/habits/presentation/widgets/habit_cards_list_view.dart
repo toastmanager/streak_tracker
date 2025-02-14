@@ -11,7 +11,7 @@ class HabitCardsListView extends StatelessWidget {
     required this.habits,
   });
 
-  final List<HabitDto> habits;
+  final List<HabitDetailsDto> habits;
 
   @override
   Widget build(BuildContext context) {

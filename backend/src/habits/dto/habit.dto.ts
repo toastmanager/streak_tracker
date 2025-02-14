@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsInt, IsISO8601, IsString } from 'class-validator';
+import { IsInt, IsISO8601, IsString } from 'class-validator';
 
 export class HabitDto {
   @ApiProperty({
@@ -17,16 +17,6 @@ export class HabitDto {
   })
   @IsInt()
   maxGapDays: number;
-
-  @ApiProperty({
-    type: 'integer',
-  })
-  @IsInt()
-  streak: number;
-
-  @ApiProperty()
-  @IsBoolean()
-  isDoneToday: boolean;
 
   @ApiProperty()
   @IsISO8601()

@@ -20,7 +20,7 @@ mixin _$HabitsState {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<HabitDto> habits) loaded,
+    required TResult Function(List<HabitDetailsDto> habits) loaded,
     required TResult Function(String message) error,
   }) =>
       throw _privateConstructorUsedError;
@@ -28,7 +28,7 @@ mixin _$HabitsState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<HabitDto> habits)? loaded,
+    TResult? Function(List<HabitDetailsDto> habits)? loaded,
     TResult? Function(String message)? error,
   }) =>
       throw _privateConstructorUsedError;
@@ -36,7 +36,7 @@ mixin _$HabitsState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<HabitDto> habits)? loaded,
+    TResult Function(List<HabitDetailsDto> habits)? loaded,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) =>
@@ -132,7 +132,7 @@ class _$InitialImpl implements _Initial {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<HabitDto> habits) loaded,
+    required TResult Function(List<HabitDetailsDto> habits) loaded,
     required TResult Function(String message) error,
   }) {
     return initial();
@@ -143,7 +143,7 @@ class _$InitialImpl implements _Initial {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<HabitDto> habits)? loaded,
+    TResult? Function(List<HabitDetailsDto> habits)? loaded,
     TResult? Function(String message)? error,
   }) {
     return initial?.call();
@@ -154,7 +154,7 @@ class _$InitialImpl implements _Initial {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<HabitDto> habits)? loaded,
+    TResult Function(List<HabitDetailsDto> habits)? loaded,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {
@@ -249,7 +249,7 @@ class _$LoadingImpl implements _Loading {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<HabitDto> habits) loaded,
+    required TResult Function(List<HabitDetailsDto> habits) loaded,
     required TResult Function(String message) error,
   }) {
     return loading();
@@ -260,7 +260,7 @@ class _$LoadingImpl implements _Loading {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<HabitDto> habits)? loaded,
+    TResult? Function(List<HabitDetailsDto> habits)? loaded,
     TResult? Function(String message)? error,
   }) {
     return loading?.call();
@@ -271,7 +271,7 @@ class _$LoadingImpl implements _Loading {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<HabitDto> habits)? loaded,
+    TResult Function(List<HabitDetailsDto> habits)? loaded,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {
@@ -329,7 +329,7 @@ abstract class _$$LoadedImplCopyWith<$Res> {
           _$LoadedImpl value, $Res Function(_$LoadedImpl) then) =
       __$$LoadedImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({List<HabitDto> habits});
+  $Res call({List<HabitDetailsDto> habits});
 }
 
 /// @nodoc
@@ -351,7 +351,7 @@ class __$$LoadedImplCopyWithImpl<$Res>
       habits: null == habits
           ? _value._habits
           : habits // ignore: cast_nullable_to_non_nullable
-              as List<HabitDto>,
+              as List<HabitDetailsDto>,
     ));
   }
 }
@@ -359,11 +359,12 @@ class __$$LoadedImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$LoadedImpl implements _Loaded {
-  const _$LoadedImpl({required final List<HabitDto> habits}) : _habits = habits;
+  const _$LoadedImpl({required final List<HabitDetailsDto> habits})
+      : _habits = habits;
 
-  final List<HabitDto> _habits;
+  final List<HabitDetailsDto> _habits;
   @override
-  List<HabitDto> get habits {
+  List<HabitDetailsDto> get habits {
     if (_habits is EqualUnmodifiableListView) return _habits;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_habits);
@@ -399,7 +400,7 @@ class _$LoadedImpl implements _Loaded {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<HabitDto> habits) loaded,
+    required TResult Function(List<HabitDetailsDto> habits) loaded,
     required TResult Function(String message) error,
   }) {
     return loaded(habits);
@@ -410,7 +411,7 @@ class _$LoadedImpl implements _Loaded {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<HabitDto> habits)? loaded,
+    TResult? Function(List<HabitDetailsDto> habits)? loaded,
     TResult? Function(String message)? error,
   }) {
     return loaded?.call(habits);
@@ -421,7 +422,7 @@ class _$LoadedImpl implements _Loaded {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<HabitDto> habits)? loaded,
+    TResult Function(List<HabitDetailsDto> habits)? loaded,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {
@@ -470,9 +471,10 @@ class _$LoadedImpl implements _Loaded {
 }
 
 abstract class _Loaded implements HabitsState {
-  const factory _Loaded({required final List<HabitDto> habits}) = _$LoadedImpl;
+  const factory _Loaded({required final List<HabitDetailsDto> habits}) =
+      _$LoadedImpl;
 
-  List<HabitDto> get habits;
+  List<HabitDetailsDto> get habits;
 
   /// Create a copy of HabitsState
   /// with the given fields replaced by the non-null parameter values.
@@ -551,7 +553,7 @@ class _$ErrorImpl implements _Error {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<HabitDto> habits) loaded,
+    required TResult Function(List<HabitDetailsDto> habits) loaded,
     required TResult Function(String message) error,
   }) {
     return error(message);
@@ -562,7 +564,7 @@ class _$ErrorImpl implements _Error {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<HabitDto> habits)? loaded,
+    TResult? Function(List<HabitDetailsDto> habits)? loaded,
     TResult? Function(String message)? error,
   }) {
     return error?.call(message);
@@ -573,7 +575,7 @@ class _$ErrorImpl implements _Error {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<HabitDto> habits)? loaded,
+    TResult Function(List<HabitDetailsDto> habits)? loaded,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {

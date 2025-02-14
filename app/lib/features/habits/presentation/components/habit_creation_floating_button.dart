@@ -36,9 +36,9 @@ class HabitCreationFloatingButton extends StatelessWidget {
                   setState(() => enabled = false);
                   await sl<HabitsRepository>().createHabit(
                     form: CreateHabitDto(
-                        name: titleController.text,
-                        maxGapDays:
-                            int.tryParse(maxGapDaysController.text) ?? 0),
+                      name: titleController.text,
+                      maxGapDays: int.tryParse(maxGapDaysController.text) ?? 0,
+                    ),
                   );
                   if (context.mounted) {
                     context.read<HabitsCubit>().getHabits();

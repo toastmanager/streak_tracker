@@ -113,8 +113,6 @@ HabitDto _$HabitDtoFromJson(Map<String, dynamic> json) => HabitDto(
       id: (json['id'] as num).toInt(),
       name: json['name'] as String,
       maxGapDays: (json['maxGapDays'] as num).toInt(),
-      streak: (json['streak'] as num).toInt(),
-      isDoneToday: json['isDoneToday'] as bool,
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
     );
@@ -123,10 +121,30 @@ Map<String, dynamic> _$HabitDtoToJson(HabitDto instance) => <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
       'maxGapDays': instance.maxGapDays,
-      'streak': instance.streak,
-      'isDoneToday': instance.isDoneToday,
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt.toIso8601String(),
+    };
+
+HabitDetailsDto _$HabitDetailsDtoFromJson(Map<String, dynamic> json) =>
+    HabitDetailsDto(
+      id: (json['id'] as num).toInt(),
+      name: json['name'] as String,
+      maxGapDays: (json['maxGapDays'] as num).toInt(),
+      createdAt: DateTime.parse(json['createdAt'] as String),
+      updatedAt: DateTime.parse(json['updatedAt'] as String),
+      streak: (json['streak'] as num).toInt(),
+      isDoneToday: json['isDoneToday'] as bool,
+    );
+
+Map<String, dynamic> _$HabitDetailsDtoToJson(HabitDetailsDto instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'name': instance.name,
+      'maxGapDays': instance.maxGapDays,
+      'createdAt': instance.createdAt.toIso8601String(),
+      'updatedAt': instance.updatedAt.toIso8601String(),
+      'streak': instance.streak,
+      'isDoneToday': instance.isDoneToday,
     };
 
 UpdateHabitDto _$UpdateHabitDtoFromJson(Map<String, dynamic> json) =>

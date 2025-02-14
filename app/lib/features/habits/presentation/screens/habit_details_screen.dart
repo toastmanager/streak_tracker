@@ -25,11 +25,11 @@ class ActivityDetailsScreen extends StatelessWidget {
     final titleController = TextEditingController();
     final maxGapDaysController = TextEditingController();
 
-    return FutureBuilder<HabitDto>(
+    return FutureBuilder<HabitDetailsDto>(
         future: sl<HabitsRepository>().getHabit(id: id),
         builder: (context, snapshot) {
-          HabitDto habit = snapshot.data ??
-              HabitDto(
+          HabitDetailsDto habit = snapshot.data ??
+              HabitDetailsDto(
                 id: id,
                 name: "",
                 maxGapDays: 0,
@@ -79,7 +79,7 @@ class ActivityDetailsScreen extends StatelessWidget {
                               onConfirm: () async {
                                 setModalState(
                                     () => isHabitDetailsEnabled = false);
-                                final updatedHabit =
+                                final _ =
                                     await sl<HabitsRepository>().updateHabit(
                                   id: id,
                                   form: UpdateHabitDto(
@@ -90,7 +90,10 @@ class ActivityDetailsScreen extends StatelessWidget {
                                 );
                                 if (context.mounted) {
                                   context.read<HabitsCubit>().getHabits();
-                                  setState(() => habit = updatedHabit);
+                                  setState(() => habit.copyWith(
+                                      name: titleController.text,
+                                      maxGapDays: int.parse(
+                                          maxGapDaysController.text)));
                                   setModalState(() {
                                     isHabitDetailsEnabled = true;
                                   });

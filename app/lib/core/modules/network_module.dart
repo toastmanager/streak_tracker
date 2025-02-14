@@ -86,16 +86,17 @@ class AuthInterceptor extends Authenticator {
 
       if (newToken != null) {
         _refreshAttempts = 0;
+        final authorizationHeader =
+            sl<AuthTokenService>().getAuthorizationHeader() ?? "";
+        request = request.copyWith(headers: {
+          ...request.headers,
+          HttpHeaders.authorizationHeader: authorizationHeader,
+        });
+        return request;
       }
     }
 
-    final authorizationHeader =
-        sl<AuthTokenService>().getAuthorizationHeader() ?? "";
-    request = request.copyWith(headers: {
-      ...request.headers,
-      HttpHeaders.authorizationHeader: authorizationHeader,
-    });
-    return request;
+    return null;
   }
 }
 

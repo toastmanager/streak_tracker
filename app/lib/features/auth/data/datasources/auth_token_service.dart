@@ -32,8 +32,8 @@ class AuthTokenServiceImpl implements AuthTokenService {
       logger.e(authTokenResponse.error);
       return null;
     }
-    final authToken = authTokenResponse.body;
-    _accessToken = authToken!.accessToken;
+    final authToken = authTokenResponse.body!;
+    setAccessToken(authToken.accessToken);
     return authToken;
   }
 

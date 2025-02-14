@@ -207,18 +207,18 @@ final class _$RestApi extends RestApi {
   }
 
   @override
-  Future<Response<List<HabitDto>>> _apiV1HabitsUsersMeGet() {
+  Future<Response<List<HabitDetailsDto>>> _apiV1HabitsUsersMeGet() {
     final Uri $url = Uri.parse('/api/v1/habits/users/me');
     final Request $request = Request(
       'GET',
       $url,
       client.baseUrl,
     );
-    return client.send<List<HabitDto>, HabitDto>($request);
+    return client.send<List<HabitDetailsDto>, HabitDetailsDto>($request);
   }
 
   @override
-  Future<Response<List<HabitDto>>> _apiV1HabitsUsersUserIdGet(
+  Future<Response<List<HabitDetailsDto>>> _apiV1HabitsUsersUserIdGet(
       {required String? userId}) {
     final Uri $url = Uri.parse('/api/v1/habits/users/${userId}');
     final Request $request = Request(
@@ -226,18 +226,18 @@ final class _$RestApi extends RestApi {
       $url,
       client.baseUrl,
     );
-    return client.send<List<HabitDto>, HabitDto>($request);
+    return client.send<List<HabitDetailsDto>, HabitDetailsDto>($request);
   }
 
   @override
-  Future<Response<HabitDto>> _apiV1HabitsIdGet({required String? id}) {
+  Future<Response<HabitDetailsDto>> _apiV1HabitsIdGet({required String? id}) {
     final Uri $url = Uri.parse('/api/v1/habits/${id}');
     final Request $request = Request(
       'GET',
       $url,
       client.baseUrl,
     );
-    return client.send<HabitDto, HabitDto>($request);
+    return client.send<HabitDetailsDto, HabitDetailsDto>($request);
   }
 
   @override

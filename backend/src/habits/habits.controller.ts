@@ -25,6 +25,7 @@ import { HabitUtils } from './habits.utils';
 import { HabitDto } from './dto/habit.dto';
 import { TodayActivityDto } from './dto/today-activity.dto';
 import { MonthlyActivityDto } from './dto/monthly-activity.dto';
+import { HabitDetailsDto } from './dto/habit-details.dto';
 
 @Controller('habits')
 export class HabitsController {
@@ -79,7 +80,7 @@ export class HabitsController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @ApiOkResponse({
-    type: HabitDto,
+    type: HabitDetailsDto,
     isArray: true,
   })
   async findReqUsersAll(@Request() req: any) {
@@ -99,7 +100,7 @@ export class HabitsController {
   @ApiBearerAuth()
   @Get('users/:user_id')
   @ApiOkResponse({
-    type: HabitDto,
+    type: HabitDetailsDto,
     isArray: true,
   })
   async findUsersAll(@Param('user_id') userId: string) {
@@ -116,7 +117,7 @@ export class HabitsController {
 
   @Get(':id')
   @ApiOkResponse({
-    type: HabitDto,
+    type: HabitDetailsDto,
   })
   async findOne(@Param('id') id: string) {
     const habit = await this.habitsService.findUnique({
@@ -180,14 +181,11 @@ export class HabitsController {
 
     if (habit && habit.userId == +user.sub) {
       try {
-        const removedHabit = {
-          ...this.habitUtils.getRelatedData(habit),
-          ...(await this.habitsService.remove({
-            where: {
-              id: +id,
-            },
-          })),
-        };
+        const removedHabit = await this.habitsService.remove({
+          where: {
+            id: +id,
+          },
+        });
         return removedHabit;
       } catch (error) {
         throw new NotFoundException();

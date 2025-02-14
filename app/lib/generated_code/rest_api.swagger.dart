@@ -261,21 +261,23 @@ abstract class RestApi extends ChopperService {
   Future<chopper.Response<List<HabitDto>>> _apiV1HabitsGet();
 
   ///
-  Future<chopper.Response<List<HabitDto>>> apiV1HabitsUsersMeGet() {
-    generatedMapping.putIfAbsent(HabitDto, () => HabitDto.fromJsonFactory);
+  Future<chopper.Response<List<HabitDetailsDto>>> apiV1HabitsUsersMeGet() {
+    generatedMapping.putIfAbsent(
+        HabitDetailsDto, () => HabitDetailsDto.fromJsonFactory);
 
     return _apiV1HabitsUsersMeGet();
   }
 
   ///
   @Get(path: '/api/v1/habits/users/me')
-  Future<chopper.Response<List<HabitDto>>> _apiV1HabitsUsersMeGet();
+  Future<chopper.Response<List<HabitDetailsDto>>> _apiV1HabitsUsersMeGet();
 
   ///
   ///@param user_id
-  Future<chopper.Response<List<HabitDto>>> apiV1HabitsUsersUserIdGet(
+  Future<chopper.Response<List<HabitDetailsDto>>> apiV1HabitsUsersUserIdGet(
       {required String? userId}) {
-    generatedMapping.putIfAbsent(HabitDto, () => HabitDto.fromJsonFactory);
+    generatedMapping.putIfAbsent(
+        HabitDetailsDto, () => HabitDetailsDto.fromJsonFactory);
 
     return _apiV1HabitsUsersUserIdGet(userId: userId);
   }
@@ -283,13 +285,15 @@ abstract class RestApi extends ChopperService {
   ///
   ///@param user_id
   @Get(path: '/api/v1/habits/users/{user_id}')
-  Future<chopper.Response<List<HabitDto>>> _apiV1HabitsUsersUserIdGet(
+  Future<chopper.Response<List<HabitDetailsDto>>> _apiV1HabitsUsersUserIdGet(
       {@Path('user_id') required String? userId});
 
   ///
   ///@param id
-  Future<chopper.Response<HabitDto>> apiV1HabitsIdGet({required String? id}) {
-    generatedMapping.putIfAbsent(HabitDto, () => HabitDto.fromJsonFactory);
+  Future<chopper.Response<HabitDetailsDto>> apiV1HabitsIdGet(
+      {required String? id}) {
+    generatedMapping.putIfAbsent(
+        HabitDetailsDto, () => HabitDetailsDto.fromJsonFactory);
 
     return _apiV1HabitsIdGet(id: id);
   }
@@ -297,7 +301,7 @@ abstract class RestApi extends ChopperService {
   ///
   ///@param id
   @Get(path: '/api/v1/habits/{id}')
-  Future<chopper.Response<HabitDto>> _apiV1HabitsIdGet(
+  Future<chopper.Response<HabitDetailsDto>> _apiV1HabitsIdGet(
       {@Path('id') required String? id});
 
   ///
