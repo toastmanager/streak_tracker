@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
     final appRouter = sl<AppRouter>();
 
     return MaterialApp.router(
-      title: 'Boilerplate',
+      title: 'Streak Tracker',
       theme: ThemeData(
         visualDensity: VisualDensity.standard,
         colorScheme: ColorScheme.fromSeed(
