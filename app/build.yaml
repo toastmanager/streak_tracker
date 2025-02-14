@@ -2,6 +2,15 @@ global_options:
   freezed:
     runs_before:
       - json_serializable
-  json_serializable:
-    runs_before:
-      - retrofit_generator
+
+targets:
+  $default:
+    builders:
+      swagger_dart_code_generator:
+        options:
+          input_folder: "lib/swaggers"
+          output_folder: "lib/generated_code/"
+          separate_models: true
+          default_values_map:
+            - type_name: integer
+              default_value: "int"

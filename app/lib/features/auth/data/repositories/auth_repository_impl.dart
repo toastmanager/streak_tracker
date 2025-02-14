@@ -1,46 +1,31 @@
-import 'package:app/features/auth/data/datasources/local/auth_local_data_source.dart';
-import 'package:app/features/auth/data/datasources/remote/auth_remote_data_source.dart';
-import 'package:app/features/auth/data/datasources/remote/auth_token_service.dart';
-import 'package:app/features/auth/domain/entities/login_form_entity.dart';
-import 'package:app/features/auth/domain/entities/register_form_entity.dart';
-import 'package:app/features/auth/domain/entities/user.dart';
+import 'package:app/features/auth/data/datasources/auth_token_service.dart';
 import 'package:app/features/auth/domain/repositories/auth_repository.dart';
-import 'package:dio/dio.dart';
+import 'package:app/generated_code/client_index.dart';
+import 'package:app/generated_code/rest_api.models.swagger.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logger/logger.dart';
 
 @Injectable(as: AuthRepository)
 class AuthRepositoryImpl implements AuthRepository {
-  final AuthRemoteDataSource remoteDataSource;
-  final AuthLocalDataSource localDataSource;
-  final AuthTokenService tokenDataSource;
+  final RestApi restApi;
+  final AuthTokenService authTokenService;
   final Logger logger;
 
   const AuthRepositoryImpl({
-    required this.localDataSource,
-    required this.remoteDataSource,
-    required this.tokenDataSource,
+    required this.restApi,
+    required this.authTokenService,
     required this.logger,
   });
 
   @override
-  Future<User?> loadMe() async {
+  Future<UserDto?> loadMe() async {
     try {
-      if (tokenDataSource.getAccessToken() != null) {
-        final localUser = localDataSource.getLocalUser();
-        if (localUser != null) {
-          return localUser;
-        }
+      final userResponse = await restApi.apiV1AuthMePost();
+      if (userResponse.error != null) {
+        throw Exception(userResponse.error);
       }
-      try {
-        return await remoteDataSource.fetchMe();
-      } on DioException catch (e) {
-        if (e.response?.statusCode == 401) {
-          localDataSource.setLocalUser(null);
-          return null;
-        }
-        rethrow;
-      }
+      final user = userResponse.body;
+      return user;
     } catch (e) {
       logger.e(e);
       rethrow;
@@ -48,12 +33,15 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<User?> login(LoginFormEntity form) async {
+  Future<UserDto?> login(LoginDto form) async {
     try {
-      await remoteDataSource.login(form);
-      final remoteUser = await remoteDataSource.fetchMe();
-      localDataSource.setLocalUser(remoteUser);
-      return remoteUser;
+      final authToken = (await restApi.apiV1AuthLoginPost(body: form));
+      if (authToken.error != null) {
+        throw Exception(authToken.error);
+      }
+      authTokenService.setAccessToken(authToken.body!.accessToken);
+      final user = await loadMe();
+      return user;
     } catch (e) {
       logger.e(e);
       rethrow;
@@ -63,8 +51,7 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<void> logout() async {
     try {
-      await remoteDataSource.logout();
-      await localDataSource.logout();
+      await restApi.apiV1AuthLogoutPost();
     } catch (e) {
       logger.e(e);
       rethrow;
@@ -72,12 +59,11 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<User?> register(RegisterFormEntity form) async {
+  Future<UserDto?> register(RegisterDto form) async {
     try {
-      await remoteDataSource.register(form);
-      final remoteUser = await remoteDataSource.fetchMe();
-      localDataSource.setLocalUser(remoteUser);
-      return remoteUser;
+      final _ = (await restApi.apiV1AuthRegisterPost(body: form));
+      final user = (await restApi.apiV1AuthMePost()).body;
+      return user;
     } catch (e) {
       logger.e(e);
       rethrow;

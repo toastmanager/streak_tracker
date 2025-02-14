@@ -1,6 +1,6 @@
 import 'package:app/core/routes/router.dart';
-import 'package:app/features/activities/domain/cubit/habits_cubit.dart';
-import 'package:app/features/auth/domain/bloc/auth_bloc.dart';
+import 'package:app/features/auth/domain/cubit/auth_cubit.dart';
+import 'package:app/features/habits/domain/cubit/habits_cubit.dart';
 import 'package:app/injection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -28,7 +28,7 @@ void main() async {
   runApp(MultiBlocProvider(
     providers: [
       BlocProvider(
-        create: (context) => sl<AuthBloc>()..add(AuthFetchMe()),
+        create: (context) => sl<AuthCubit>()..loadMe(),
       ),
       BlocProvider(
         create: (context) => sl<HabitsCubit>()..getHabits(),
@@ -53,7 +53,9 @@ class MyApp extends StatelessWidget {
           seedColor: Colors.tealAccent,
           brightness: Brightness.dark,
         ),
-        textTheme: GoogleFonts.onestTextTheme().apply(bodyColor: Colors.white),
+        textTheme: GoogleFonts.onestTextTheme().apply(
+          bodyColor: Colors.white,
+        ),
         inputDecorationTheme: InputDecorationTheme(
           filled: true,
           border: OutlineInputBorder(

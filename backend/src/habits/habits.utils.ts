@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ActivitiesService } from './activities/activities.service';
-import { datesDayDiff } from '../core.utils';
+import { getDateDifferenceInDays } from '../core.utils';
 import { Habit } from '@prisma/client';
 
 @Injectable()
@@ -22,12 +22,15 @@ export class HabitUtils {
     let prevDate = new Date();
     if (
       activities.length > 0 &&
-      datesDayDiff(new Date(), activities[0].date) == 0
+      getDateDifferenceInDays(new Date(), activities[0].date) == 0
     ) {
       isDoneToday = true;
     }
     for (const activity of activities) {
-      if (datesDayDiff(prevDate, activity.date) > habit.maxGapDays + 1) {
+      if (
+        getDateDifferenceInDays(prevDate, activity.date) >
+        habit.maxGapDays + 1
+      ) {
         break;
       }
       prevDate = activity.date;

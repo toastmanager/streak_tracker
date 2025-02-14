@@ -1,11 +1,8 @@
 import 'package:app/core/routes/router.gr.dart';
-import 'package:app/features/activities/presentation/components/habit_creation_floating_button.dart';
-import 'package:app/features/auth/domain/bloc/auth_bloc.dart';
-import 'package:app/features/auth/domain/cubit/login_cubit.dart';
-import 'package:app/features/auth/domain/cubit/registration_cubit.dart';
-import 'package:app/features/auth/presentation/screens/login_screen.dart';
-import 'package:app/features/auth/presentation/screens/registration_screen.dart';
-import 'package:app/injection.dart';
+import 'package:app/features/auth/domain/cubit/auth_cubit.dart';
+import 'package:app/features/auth/presentation/widgets/login_screen.dart';
+import 'package:app/features/auth/presentation/widgets/registration_screen.dart';
+import 'package:app/features/habits/presentation/components/habit_creation_floating_button.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,13 +13,13 @@ class MainScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AuthBloc, AuthState>(
+    return BlocBuilder<AuthCubit, AuthState>(
       builder: (context, state) {
         return state.maybeWhen(
-          logged: (user) => AutoTabsRouter(
-            routes: const [
-              ActivityListRoute(),
-              ProfileRoute(),
+          authorized: (user) => AutoTabsRouter(
+            routes: [
+              const HabitsListRoute(),
+              ProfileRoute(user: user),
             ],
             builder: (context, child) {
               final tabsRouter = AutoTabsRouter.of(context);
@@ -50,31 +47,25 @@ class MainScreen extends StatelessWidget {
           ),
           loading: () => const Scaffold(),
           initial: () => const Scaffold(),
-          orElse: () => MultiBlocProvider(
-            providers: [
-              BlocProvider(create: (context) => sl<LoginCubit>()),
-              BlocProvider(create: (context) => sl<RegistrationCubit>()),
-            ],
-            child: Scaffold(
-              body: SafeArea(
-                child: DefaultTabController(
-                  length: 2,
-                  child: Column(
-                    children: [
-                      TabBar(
-                        tabs: [
-                          Tab(text: 'Вход'),
-                          Tab(text: 'Регистрация'),
-                        ],
-                      ),
-                      Expanded(
-                        child: TabBarView(children: [
-                          LoginScreen(),
-                          RegistrationScreen(),
-                        ]),
-                      ),
-                    ],
-                  ),
+          orElse: () => Scaffold(
+            body: SafeArea(
+              child: DefaultTabController(
+                length: 2,
+                child: Column(
+                  children: [
+                    TabBar(
+                      tabs: [
+                        Tab(text: 'Вход'),
+                        Tab(text: 'Регистрация'),
+                      ],
+                    ),
+                    Expanded(
+                      child: TabBarView(children: [
+                        LoginScreen(),
+                        RegistrationScreen(),
+                      ]),
+                    ),
+                  ],
                 ),
               ),
             ),

@@ -19,9 +19,13 @@ import { Roles } from '../auth/decorators/roles.decorator';
 import { Role } from '@prisma/client';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOkResponse } from '@nestjs/swagger';
 import { ActivitiesService } from './activities/activities.service';
 import { HabitUtils } from './habits.utils';
+import { HabitDto } from './dto/habit.dto';
+import { TodayActivityDto } from './dto/today-activity.dto';
+import { MonthlyActivityDto } from './dto/monthly-activity.dto';
+import { HabitDetailsDto } from './dto/habit-details.dto';
 
 @Controller('habits')
 export class HabitsController {
@@ -34,6 +38,9 @@ export class HabitsController {
   @Post()
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
+  @ApiOkResponse({
+    type: HabitDto,
+  })
   async create(@Request() req: any, @Body() createHabitDto: CreateHabitDto) {
     const { user } = req;
 
@@ -55,6 +62,10 @@ export class HabitsController {
   @Roles(Role.MODERATOR)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiBearerAuth()
+  @ApiOkResponse({
+    type: HabitDto,
+    isArray: true,
+  })
   async findAll() {
     const habits = await this.habitsService.findMany({
       orderBy: {
@@ -68,6 +79,10 @@ export class HabitsController {
   @Get('users/me')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
+  @ApiOkResponse({
+    type: HabitDetailsDto,
+    isArray: true,
+  })
   async findReqUsersAll(@Request() req: any) {
     const { user } = req;
 
@@ -84,6 +99,10 @@ export class HabitsController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiBearerAuth()
   @Get('users/:user_id')
+  @ApiOkResponse({
+    type: HabitDetailsDto,
+    isArray: true,
+  })
   async findUsersAll(@Param('user_id') userId: string) {
     const habits = await this.habitsService.findMany({
       where: {
@@ -97,6 +116,9 @@ export class HabitsController {
   }
 
   @Get(':id')
+  @ApiOkResponse({
+    type: HabitDetailsDto,
+  })
   async findOne(@Param('id') id: string) {
     const habit = await this.habitsService.findUnique({
       where: {
@@ -112,11 +134,14 @@ export class HabitsController {
   @Patch(':id')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
+  @ApiOkResponse({
+    type: HabitDetailsDto,
+  })
   async update(
     @Request() req: any,
     @Param('id') id: string,
     @Body() UpdateHabitDto: UpdateHabitDto,
-  ) {
+  ): Promise<HabitDetailsDto> {
     const { user } = req;
     const habit = await this.habitsService.findUnique({
       where: {
@@ -126,12 +151,17 @@ export class HabitsController {
 
     if (habit && habit.userId == +user.sub) {
       try {
-        return this.habitsService.update({
+        const updatedHabit = await this.habitsService.update({
           where: {
             id: +id,
           },
           data: UpdateHabitDto,
         });
+        const relatedData = await this.habitUtils.getRelatedData(updatedHabit);
+        return {
+          ...updatedHabit,
+          ...relatedData,
+        };
       } catch (error) {
         throw new NotFoundException();
       }
@@ -143,6 +173,9 @@ export class HabitsController {
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
+  @ApiOkResponse({
+    type: HabitDto,
+  })
   async remove(@Request() req: any, @Param('id') id: string) {
     const { user } = req;
     const habit = await this.habitsService.findUnique({
@@ -153,11 +186,12 @@ export class HabitsController {
 
     if (habit && habit.userId == +user.sub) {
       try {
-        return this.habitsService.remove({
+        const removedHabit = await this.habitsService.remove({
           where: {
             id: +id,
           },
         });
+        return removedHabit;
       } catch (error) {
         throw new NotFoundException();
       }
@@ -168,21 +202,28 @@ export class HabitsController {
   @Get(':id/activities/:year/:month')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
+  @ApiOkResponse({
+    type: MonthlyActivityDto,
+  })
   async getMonthActivity(
     @Request() req: any,
     @Param('id') id: string,
     @Param('year') year: string,
     @Param('month') month: string,
-  ) {
+  ): Promise<MonthlyActivityDto> {
     const activities = await this.activitiesService.findMany({
       where: {
         habitId: +id,
-        year: +year,
-        month: +month,
+        date: {
+          gte: new Date(+year, +month - 1),
+          lt: new Date(+year, +month),
+        },
         isDisplayed: true,
       },
     });
-    return activities.map((el) => el.day);
+    return {
+      activity: activities.map((el) => el.date.getUTCDate()),
+    };
   }
 
   @Get(':id/activities')
@@ -203,14 +244,21 @@ export class HabitsController {
   async getTodayActivtiy(@Request() req: any, @Param('id') id: string) {
     const { user } = req;
     const today = new Date();
-    const activity = await this.activitiesService.findUnique({
+    const activity = await this.activitiesService.findFirst({
       where: {
-        year_month_day_habitId: {
-          day: today.getUTCDate(),
-          month: today.getUTCMonth() + 1,
-          year: today.getUTCFullYear(),
-          habitId: +id,
+        date: {
+          gte: new Date(
+            today.getUTCFullYear(),
+            today.getUTCMonth(),
+            today.getUTCDate(),
+          ),
+          lt: new Date(
+            today.getUTCFullYear(),
+            today.getUTCMonth(),
+            today.getUTCDate() + 1,
+          ),
         },
+        habitId: +id,
       },
     });
 
@@ -225,9 +273,7 @@ export class HabitsController {
     const today = new Date();
     const _ = await this.activitiesService.create({
       data: {
-        day: today.getUTCDate(),
-        month: today.getUTCMonth() + 1,
-        year: today.getUTCFullYear(),
+        date: today,
         habit: {
           connect: {
             id: +id,
@@ -250,14 +296,29 @@ export class HabitsController {
   async removeTodayActivtiy(@Request() req: any, @Param('id') id: string) {
     const { user } = req;
     const today = new Date();
+    const activity = await this.activitiesService.findFirst({
+      where: {
+        date: {
+          gte: new Date(
+            today.getUTCFullYear(),
+            today.getUTCMonth(),
+            today.getUTCDate(),
+          ),
+          lt: new Date(
+            today.getUTCFullYear(),
+            today.getUTCMonth(),
+            today.getUTCDate() + 1,
+          ),
+        },
+        habitId: +id,
+      },
+      select: {
+        id: true,
+      },
+    });
     const _ = await this.activitiesService.remove({
       where: {
-        year_month_day_habitId: {
-          day: today.getUTCDate(),
-          month: today.getUTCMonth() + 1,
-          year: today.getUTCFullYear(),
-          habitId: +id,
-        },
+        id: activity.id,
       },
     });
 
@@ -267,51 +328,43 @@ export class HabitsController {
   @Put(':id/activities/today')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  async switchTodayActivtiy(@Request() req: any, @Param('id') id: string) {
+  @ApiOkResponse({
+    type: TodayActivityDto,
+  })
+  async switchTodayActivtiy(
+    @Request() req: any,
+    @Param('id') id: string,
+  ): Promise<TodayActivityDto> {
     const { user } = req;
     const today = new Date();
-    const activity = await this.activitiesService.findUnique({
+    const activity = await this.activitiesService.findFirst({
       where: {
-        year_month_day_habitId: {
-          day: today.getUTCDate(),
-          month: today.getUTCMonth() + 1,
-          year: today.getUTCFullYear(),
-          habitId: +id,
+        date: {
+          gte: new Date(
+            today.getUTCFullYear(),
+            today.getUTCMonth(),
+            today.getUTCDate(),
+          ),
+          lt: new Date(
+            today.getUTCFullYear(),
+            today.getUTCMonth(),
+            today.getUTCDate() + 1,
+          ),
         },
+        habitId: +id,
       },
     });
 
     if (!activity) {
-      await this.activitiesService.create({
-        data: {
-          day: today.getUTCDate(),
-          month: today.getUTCMonth() + 1,
-          year: today.getUTCFullYear(),
-          habit: {
-            connect: {
-              id: +id,
-            },
-          },
-          user: {
-            connect: {
-              id: +user.sub,
-            },
-          },
-        },
-      });
-      return true;
+      await this.addTodayActivtiy(req, id);
+      return {
+        isDoneToday: true,
+      };
     } else {
-      await this.activitiesService.remove({
-        where: {
-          year_month_day_habitId: {
-            day: today.getUTCDate(),
-            month: today.getUTCMonth() + 1,
-            year: today.getUTCFullYear(),
-            habitId: +id,
-          },
-        },
-      });
-      return false;
+      await this.removeTodayActivtiy(req, id);
+      return {
+        isDoneToday: false,
+      };
     }
   }
 }

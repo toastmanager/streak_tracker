@@ -6,7 +6,9 @@ export class CreateHabitDto {
   @IsString()
   name: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: 'integer',
+  })
   @IsInt()
   maxGapDays: number;
 }
