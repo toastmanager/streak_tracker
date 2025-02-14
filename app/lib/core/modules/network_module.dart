@@ -88,11 +88,10 @@ class AuthInterceptor extends Authenticator {
         _refreshAttempts = 0;
         final authorizationHeader =
             sl<AuthTokenService>().getAuthorizationHeader() ?? "";
-        request = request.copyWith(headers: {
+        return request.copyWith(headers: {
           ...request.headers,
           HttpHeaders.authorizationHeader: authorizationHeader,
         });
-        return request;
       }
     }
 
