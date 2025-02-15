@@ -26,6 +26,7 @@ class ActivityDetailsScreen extends StatelessWidget {
     final titleController = TextEditingController();
     final maxGapDaysController = TextEditingController();
     final activityUpdateFormKey = GlobalKey<FormBuilderState>();
+    String? activityUpdateFormErrorMessage;
 
     return FutureBuilder<HabitDetailsDto>(
         future: sl<HabitsRepository>().getHabit(id: id),
@@ -78,28 +79,39 @@ class ActivityDetailsScreen extends StatelessWidget {
                                 enabled: isHabitDetailsEnabled,
                                 titleController: titleController,
                                 maxGapDaysController: maxGapDaysController,
+                                errorMessage: activityUpdateFormErrorMessage,
                                 onCancel: () {
+                                  setState(() =>
+                                      activityUpdateFormErrorMessage = null);
                                   Navigator.pop(context);
                                 },
                                 onConfirm: () async {
+                                  setState(() =>
+                                      activityUpdateFormErrorMessage = null);
                                   setModalState(
                                       () => isHabitDetailsEnabled = false);
-                                  final updatedHabit =
-                                      await sl<HabitsRepository>().updateHabit(
-                                    id: id,
-                                    form: UpdateHabitDto(
-                                      name: titleController.text,
-                                      maxGapDays:
-                                          int.parse(maxGapDaysController.text),
-                                    ),
-                                  );
-                                  if (context.mounted) {
-                                    context.read<HabitsCubit>().getHabits();
-                                    setState(() => habit = updatedHabit);
-                                    setModalState(() {
-                                      isHabitDetailsEnabled = true;
-                                    });
-                                    Navigator.pop(context);
+                                  try {
+                                    final updatedHabit =
+                                        await sl<HabitsRepository>()
+                                            .updateHabit(
+                                      id: id,
+                                      form: UpdateHabitDto(
+                                        name: titleController.text,
+                                        maxGapDays: int.parse(
+                                            maxGapDaysController.text),
+                                      ),
+                                    );
+                                    if (context.mounted) {
+                                      context.read<HabitsCubit>().getHabits();
+                                      setState(() => habit = updatedHabit);
+                                      setModalState(() {
+                                        isHabitDetailsEnabled = true;
+                                      });
+                                      Navigator.pop(context);
+                                    }
+                                  } catch (e) {
+                                    setState(() => activityUpdateFormErrorMessage =
+                                        "Непредвиденная ошибка во время обновления привычки");
                                   }
                                 },
                               ),
