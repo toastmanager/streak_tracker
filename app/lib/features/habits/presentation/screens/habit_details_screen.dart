@@ -46,13 +46,15 @@ class ActivityDetailsScreen extends StatelessWidget {
 
           return StatefulBuilder(builder: (context, setState) {
             void switchTodayActivity() async {
-              final isDoneToday =
+              setState(() => habit = habit.copyWith(
+                    isDoneToday: !habit.isDoneToday,
+                    streak: !habit.isDoneToday
+                        ? habit.streak + 1
+                        : habit.streak - 1,
+                  ));
+              final _ =
                   await sl<HabitsRepository>().switchTodayActivity(id: id);
               if (context.mounted) {
-                setState(() => habit = habit.copyWith(
-                      isDoneToday: isDoneToday,
-                      streak: isDoneToday ? habit.streak + 1 : habit.streak - 1,
-                    ));
                 context.read<HabitsCubit>().getHabits();
               }
             }
@@ -280,9 +282,12 @@ class _ActivityCalendarState extends State<ActivityCalendar> {
                     crossAxisSpacing: 4,
                   ),
                   itemBuilder: (context, index) => CalendarDay(
-                    color: activityDays.contains(index + 1) &&
-                            (!isCurrentMonth ||
-                                index + 1 != today.day ||
+                    color: (((!isCurrentMonth ||
+                                    isCurrentMonth &&
+                                        index + 1 != today.day)) &&
+                                activityDays.contains(index + 1)) ||
+                            (isCurrentMonth &&
+                                index + 1 == today.day &&
                                 widget.isDoneToday)
                         ? colors.primary
                         : null,

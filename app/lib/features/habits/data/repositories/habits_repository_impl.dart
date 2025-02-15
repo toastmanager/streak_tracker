@@ -33,7 +33,7 @@ class HabitsRepositoryImpl implements HabitsRepository {
   @override
   Future<List<HabitDetailsDto>> getHabits() async {
     final habits = (await restApi.apiV1HabitsUsersMeGet()).body;
-    return habits!;
+    return habits ?? [];
   }
 
   @override
