@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ActivitiesService } from './activities/activities.service';
 import { getDateDifferenceInDays } from '../core.utils';
 import { Habit } from '@prisma/client';
+import { HabitDetailsDto } from './dto/habit-details.dto';
 
 @Injectable()
 export class HabitUtils {
@@ -41,13 +42,13 @@ export class HabitUtils {
   }
 
   async getHabitsWithRelatedData(habits: Habit[]) {
-    let updatedHabits = [];
+    const updatedHabits: HabitDetailsDto[] = [];
     for (const habit of habits) {
       updatedHabits.push({
         ...habit,
         ...(await this.getRelatedData(habit)),
       });
     }
-    return updatedHabits;
+    return updatedHabits.sort((a, b) => b.streak - a.streak);
   }
 }
