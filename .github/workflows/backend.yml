@@ -21,3 +21,4 @@ jobs:
             cd ${{ secrets.WORK_DIR }}
             git checkout ${{ secrets.DEPLOYMENT_BRANCH }}
             git pull
+            docker compose up -d --build backend
