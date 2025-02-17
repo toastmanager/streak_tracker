@@ -10,6 +10,7 @@ class HabitFormScreen extends StatelessWidget {
     this.titleController,
     this.maxGapDaysController,
     this.title,
+    this.errorMessage,
     this.onConfirm,
     this.onCancel,
   });
@@ -18,6 +19,7 @@ class HabitFormScreen extends StatelessWidget {
   final TextEditingController? maxGapDaysController;
   final GlobalKey<FormBuilderState>? formKey;
   final String? title;
+  final String? errorMessage;
   final bool enabled;
   final void Function()? onConfirm;
   final void Function()? onCancel;
@@ -79,6 +81,13 @@ class HabitFormScreen extends StatelessWidget {
               color: colors.onSurfaceVariant,
             ),
           ),
+          if (errorMessage != null && errorMessage != "") ...[
+            const SizedBox(height: 8),
+            Text(
+              errorMessage!,
+              style: textTheme.bodyMedium?.copyWith(color: colors.error),
+            )
+          ],
           const SizedBox(height: 24),
           Row(
             children: [

@@ -26,6 +26,7 @@ class ActivityDetailsScreen extends StatelessWidget {
     final titleController = TextEditingController();
     final maxGapDaysController = TextEditingController();
     final activityUpdateFormKey = GlobalKey<FormBuilderState>();
+    String? activityUpdateFormErrorMessage;
 
     return FutureBuilder<HabitDetailsDto>(
         future: sl<HabitsRepository>().getHabit(id: id),
@@ -46,13 +47,15 @@ class ActivityDetailsScreen extends StatelessWidget {
 
           return StatefulBuilder(builder: (context, setState) {
             void switchTodayActivity() async {
-              final isDoneToday =
+              setState(() => habit = habit.copyWith(
+                    isDoneToday: !habit.isDoneToday,
+                    streak: !habit.isDoneToday
+                        ? habit.streak + 1
+                        : habit.streak - 1,
+                  ));
+              final _ =
                   await sl<HabitsRepository>().switchTodayActivity(id: id);
               if (context.mounted) {
-                setState(() => habit = habit.copyWith(
-                      isDoneToday: isDoneToday,
-                      streak: isDoneToday ? habit.streak + 1 : habit.streak - 1,
-                    ));
                 context.read<HabitsCubit>().getHabits();
               }
             }
@@ -76,28 +79,39 @@ class ActivityDetailsScreen extends StatelessWidget {
                                 enabled: isHabitDetailsEnabled,
                                 titleController: titleController,
                                 maxGapDaysController: maxGapDaysController,
+                                errorMessage: activityUpdateFormErrorMessage,
                                 onCancel: () {
+                                  setState(() =>
+                                      activityUpdateFormErrorMessage = null);
                                   Navigator.pop(context);
                                 },
                                 onConfirm: () async {
+                                  setState(() =>
+                                      activityUpdateFormErrorMessage = null);
                                   setModalState(
                                       () => isHabitDetailsEnabled = false);
-                                  final updatedHabit =
-                                      await sl<HabitsRepository>().updateHabit(
-                                    id: id,
-                                    form: UpdateHabitDto(
-                                      name: titleController.text,
-                                      maxGapDays:
-                                          int.parse(maxGapDaysController.text),
-                                    ),
-                                  );
-                                  if (context.mounted) {
-                                    context.read<HabitsCubit>().getHabits();
-                                    setState(() => habit = updatedHabit);
-                                    setModalState(() {
-                                      isHabitDetailsEnabled = true;
-                                    });
-                                    Navigator.pop(context);
+                                  try {
+                                    final updatedHabit =
+                                        await sl<HabitsRepository>()
+                                            .updateHabit(
+                                      id: id,
+                                      form: UpdateHabitDto(
+                                        name: titleController.text,
+                                        maxGapDays: int.parse(
+                                            maxGapDaysController.text),
+                                      ),
+                                    );
+                                    if (context.mounted) {
+                                      context.read<HabitsCubit>().getHabits();
+                                      setState(() => habit = updatedHabit);
+                                      setModalState(() {
+                                        isHabitDetailsEnabled = true;
+                                      });
+                                      Navigator.pop(context);
+                                    }
+                                  } catch (e) {
+                                    setState(() => activityUpdateFormErrorMessage =
+                                        "Непредвиденная ошибка во время обновления привычки");
                                   }
                                 },
                               ),
@@ -211,14 +225,14 @@ class ActivityCalendar extends StatefulWidget {
 }
 
 class _ActivityCalendarState extends State<ActivityCalendar> {
-  DateTime today = DateTime.now();
-  DateTime date = DateTime.now();
+  DateTime today = DateTime.now().toUtc();
+  DateTime date = DateTime.now().toUtc();
   int daysInMonth = 31;
   List<int> activityDays = [];
 
   void updateDate(DateTime newDate) async {
     setState(() {
-      date = newDate;
+      date = newDate.toUtc();
       daysInMonth = DateUtils.getDaysInMonth(date.year, date.month);
     });
     final newDateActivityDays = await sl<HabitsRepository>()
@@ -280,9 +294,12 @@ class _ActivityCalendarState extends State<ActivityCalendar> {
                     crossAxisSpacing: 4,
                   ),
                   itemBuilder: (context, index) => CalendarDay(
-                    color: activityDays.contains(index + 1) &&
-                            (!isCurrentMonth ||
-                                index + 1 != today.day ||
+                    color: (((!isCurrentMonth ||
+                                    isCurrentMonth &&
+                                        index + 1 != today.day)) &&
+                                activityDays.contains(index + 1)) ||
+                            (isCurrentMonth &&
+                                index + 1 == today.day &&
                                 widget.isDoneToday)
                         ? colors.primary
                         : null,

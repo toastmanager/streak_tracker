@@ -17,6 +17,7 @@ class HabitCreationFloatingButton extends StatelessWidget {
     final titleController = TextEditingController();
     final maxGapDaysController = TextEditingController();
     final activityCreationFormKey = GlobalKey<FormBuilderState>();
+    String? activityCreationFormErrorMessage;
     bool enabled = true;
 
     return FloatingActionButton(
@@ -34,26 +35,34 @@ class HabitCreationFloatingButton extends StatelessWidget {
                   enabled: enabled,
                   titleController: titleController,
                   maxGapDaysController: maxGapDaysController,
+                  errorMessage: activityCreationFormErrorMessage,
                   onCancel: () {
+                    setState(() => activityCreationFormErrorMessage = null);
                     Navigator.pop(context);
                   },
                   onConfirm: () async {
+                    setState(() => activityCreationFormErrorMessage = null);
                     setState(() => enabled = false);
-                    await sl<HabitsRepository>().createHabit(
-                      form: CreateHabitDto(
-                        name: titleController.text,
-                        maxGapDays:
-                            int.tryParse(maxGapDaysController.text) ?? 0,
-                      ),
-                    );
-                    if (context.mounted) {
-                      context.read<HabitsCubit>().getHabits();
-                      setState(() {
-                        titleController.text = "";
-                        maxGapDaysController.text = "";
-                        enabled = true;
-                      });
-                      Navigator.pop(context);
+                    try {
+                      await sl<HabitsRepository>().createHabit(
+                        form: CreateHabitDto(
+                          name: titleController.text,
+                          maxGapDays:
+                              int.tryParse(maxGapDaysController.text) ?? 0,
+                        ),
+                      );
+                      if (context.mounted) {
+                        context.read<HabitsCubit>().getHabits();
+                        setState(() {
+                          titleController.text = "";
+                          maxGapDaysController.text = "";
+                          enabled = true;
+                        });
+                        Navigator.pop(context);
+                      }
+                    } catch (e) {
+                      setState(() => activityCreationFormErrorMessage =
+                          "Непредвиденная ошибка создания привычки");
                     }
                   },
                 ),
