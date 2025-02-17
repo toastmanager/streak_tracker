@@ -225,14 +225,14 @@ class ActivityCalendar extends StatefulWidget {
 }
 
 class _ActivityCalendarState extends State<ActivityCalendar> {
-  DateTime today = DateTime.now();
-  DateTime date = DateTime.now();
+  DateTime today = DateTime.now().toUtc();
+  DateTime date = DateTime.now().toUtc();
   int daysInMonth = 31;
   List<int> activityDays = [];
 
   void updateDate(DateTime newDate) async {
     setState(() {
-      date = newDate;
+      date = newDate.toUtc();
       daysInMonth = DateUtils.getDaysInMonth(date.year, date.month);
     });
     final newDateActivityDays = await sl<HabitsRepository>()
