@@ -5,8 +5,13 @@ import { ConfigifyModule } from '@itgorillaz/configify';
 import { HabitsModule } from './habits/habits.module';
 
 @Module({
-	imports: [ConfigifyModule.forRootAsync(), UsersModule, AuthModule, HabitsModule],
-	controllers: [],
-	providers: [],
+  imports: [
+    ConfigifyModule.forRootAsync(),
+    UsersModule,
+    AuthModule,
+    HabitsModule,
+  ],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}

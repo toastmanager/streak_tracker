@@ -18,7 +18,7 @@ import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { UsersService } from 'src/users/users.service';
 import { AuthToken } from './dto/auth-token.dto';
-import { UserDto } from '../users/dto/user.dto';
+import { UserDto } from 'src/users/dto/user.dto';
 
 const refreshTokenCookieOptions = {
   expires: new Date(new Date().getTime() + 30 * 24 * 60 * 60 * 1000), // Change according to refresh token expire time

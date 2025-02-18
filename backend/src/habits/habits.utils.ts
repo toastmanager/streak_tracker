@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ActivitiesService } from './activities/activities.service';
-import { getDateDifferenceInDays } from '../core.utils';
+import { getDateDifferenceInDays } from 'src/core.utils';
 import { Habit } from '@prisma/client';
 import { HabitDetailsDto } from './dto/habit-details.dto';
 

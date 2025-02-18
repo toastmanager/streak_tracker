@@ -4,7 +4,7 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { UsersService } from '../users/users.service';
+import { UsersService } from 'src/users/users.service';
 import { RefreshToken, User } from '@prisma/client';
 import { JwtService } from '@nestjs/jwt';
 import {
