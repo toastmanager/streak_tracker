@@ -30,7 +30,7 @@ class _RegistrationScreenState extends State<RegistrationScreen>
         final isLoading =
             state.maybeWhen(loading: () => true, orElse: () => false);
         final errorMessage =
-            state.maybeWhen(error: (message) => message, orElse: () => "");
+            state.maybeWhen(error: (message) => message, orElse: () => '');
 
         return FormBuilder(
           key: formKey,
@@ -82,7 +82,7 @@ class _RegistrationScreenState extends State<RegistrationScreen>
                     FormBuilderValidators.minLength(4),
                   ]),
                 ),
-                if (errorMessage != "") ...[
+                if (errorMessage != '') ...[
                   SizedBox(height: 12),
                   Text(
                     errorMessage,

@@ -34,7 +34,7 @@ class ActivityDetailsScreen extends StatelessWidget {
           HabitDetailsDto habit = snapshot.data ??
               HabitDetailsDto(
                 id: id,
-                name: "",
+                name: '',
                 maxGapDays: 0,
                 isDoneToday: false,
                 streak: 0,
@@ -62,7 +62,7 @@ class ActivityDetailsScreen extends StatelessWidget {
 
             return Scaffold(
               appBar: AppBar(
-                title: Text("Детали"),
+                title: Text('Детали'),
                 actions: [
                   IconButton(
                     onPressed: () {
@@ -111,7 +111,7 @@ class ActivityDetailsScreen extends StatelessWidget {
                                     }
                                   } catch (e) {
                                     setState(() => activityUpdateFormErrorMessage =
-                                        "Непредвиденная ошибка во время обновления привычки");
+                                        'Непредвиденная ошибка во время обновления привычки');
                                   }
                                 },
                               ),

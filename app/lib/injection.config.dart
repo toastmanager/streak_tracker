@@ -17,8 +17,8 @@ import 'core/modules/logger_module.dart' as _i1019;
 import 'core/modules/network_module.dart' as _i401;
 import 'core/modules/shared_preferences_module.dart' as _i1007;
 import 'core/routes/router.dart' as _i66;
-import 'features/auth/data/datasources/auth_token_service.dart' as _i441;
 import 'features/auth/data/repositories/auth_repository_impl.dart' as _i111;
+import 'features/auth/data/utils/auth_token_service.dart' as _i250;
 import 'features/auth/domain/cubit/auth_cubit.dart' as _i709;
 import 'features/auth/domain/repositories/auth_repository.dart' as _i1015;
 import 'features/habits/data/repositories/habits_repository_impl.dart' as _i292;
@@ -48,25 +48,23 @@ extension GetItInjectableX on _i174.GetIt {
       () => injectionModule.prefs,
       preResolve: true,
     );
-    gh.singleton<_i441.AuthTokenService>(
-        () => _i441.AuthTokenServiceImpl(logger: gh<_i974.Logger>()));
     gh.factory<_i1025.HabitsRepository>(
         () => _i292.HabitsRepositoryImpl(restApi: gh<_i435.RestApi>()));
-    gh.factory<_i1015.AuthRepository>(() => _i111.AuthRepositoryImpl(
-          restApi: gh<_i87.RestApi>(),
-          authTokenService: gh<_i441.AuthTokenService>(),
-          logger: gh<_i974.Logger>(),
-        ));
+    gh.singleton<_i250.AuthTokenService>(
+        () => _i250.AuthTokenServiceImpl(logger: gh<_i974.Logger>()));
+    gh.factory<_i401.AccessTokenInterceptor>(() => _i401.AccessTokenInterceptor(
+        authTokenService: gh<_i250.AuthTokenService>()));
     gh.factory<_i401.CookieInterceptor>(
         () => _i401.CookieInterceptor(prefs: gh<_i460.SharedPreferences>()));
-    gh.factory<_i401.AccessTokenInterceptor>(() => _i401.AccessTokenInterceptor(
-        authTokenService: gh<_i441.AuthTokenService>()));
-    gh.factory<_i675.HabitsCubit>(() =>
-        _i675.HabitsCubit(habitsRepository: gh<_i1025.HabitsRepository>()));
-    gh.factory<_i709.AuthCubit>(() => _i709.AuthCubit(
-          authRepository: gh<_i1015.AuthRepository>(),
+    gh.factory<_i1015.AuthRepository>(() => _i111.AuthRepositoryImpl(
+          restApi: gh<_i87.RestApi>(),
+          authTokenService: gh<_i250.AuthTokenService>(),
           logger: gh<_i974.Logger>(),
         ));
+    gh.factory<_i675.HabitsCubit>(() =>
+        _i675.HabitsCubit(habitsRepository: gh<_i1025.HabitsRepository>()));
+    gh.factory<_i709.AuthCubit>(
+        () => _i709.AuthCubit(authRepository: gh<_i1015.AuthRepository>()));
     return this;
   }
 }

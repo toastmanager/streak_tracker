@@ -3,7 +3,6 @@ import 'package:app/generated_code/rest_api.models.swagger.dart';
 import 'package:bloc/bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:logger/logger.dart';
 
 part 'auth_state.dart';
 part 'auth_cubit.freezed.dart';
@@ -11,10 +10,8 @@ part 'auth_cubit.freezed.dart';
 @injectable
 class AuthCubit extends Cubit<AuthState> {
   final AuthRepository authRepository;
-  final Logger logger;
 
-  AuthCubit({required this.authRepository, required this.logger})
-      : super(AuthState.initial());
+  AuthCubit({required this.authRepository}) : super(AuthState.initial());
 
   Future<void> intialLoadMe() async {
     try {

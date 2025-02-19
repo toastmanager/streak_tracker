@@ -1,4 +1,4 @@
-import 'package:app/features/auth/data/datasources/auth_token_service.dart';
+import 'package:app/features/auth/data/utils/auth_token_service.dart';
 import 'package:app/features/auth/domain/repositories/auth_repository.dart';
 import 'package:app/generated_code/client_index.dart';
 import 'package:app/generated_code/rest_api.models.swagger.dart';

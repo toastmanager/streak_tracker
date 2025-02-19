@@ -18,7 +18,7 @@ class AuthTokenServiceImpl implements AuthTokenService {
   AuthTokenServiceImpl({required this.logger});
 
   String? _accessToken;
-  final String _tokenType = "Bearer";
+  final String _tokenType = 'Bearer';
 
   @override
   String? getAccessToken() {
@@ -44,6 +44,6 @@ class AuthTokenServiceImpl implements AuthTokenService {
 
   @override
   String? getAuthorizationHeader() {
-    return "$_tokenType $_accessToken";
+    return '$_tokenType $_accessToken';
   }
 }
