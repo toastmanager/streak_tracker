@@ -81,10 +81,12 @@ export class AuthController {
   })
   async me(@Request() req: any) {
     const { user } = req;
-    return this.usersService.findUnique({
-      where: {
-        id: +user.sub,
-      },
+    return await this.usersService.userWithRelatedData({
+      user: await this.usersService.findUnique({
+        where: {
+          id: +user.sub,
+        },
+      }),
     });
   }
 

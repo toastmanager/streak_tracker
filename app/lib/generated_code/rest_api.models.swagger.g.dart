@@ -24,6 +24,22 @@ Map<String, dynamic> _$CreateUserDtoToJson(CreateUserDto instance) =>
       'avatarKey': instance.avatarKey,
     };
 
+UserDto _$UserDtoFromJson(Map<String, dynamic> json) => UserDto(
+      username: json['username'] as String,
+      isActive: json['isActive'] as bool,
+      avatarUrl: json['avatarUrl'] as String?,
+      createdAt: DateTime.parse(json['createdAt'] as String),
+      updatedAt: DateTime.parse(json['updatedAt'] as String),
+    );
+
+Map<String, dynamic> _$UserDtoToJson(UserDto instance) => <String, dynamic>{
+      'username': instance.username,
+      'isActive': instance.isActive,
+      'avatarUrl': instance.avatarUrl,
+      'createdAt': instance.createdAt.toIso8601String(),
+      'updatedAt': instance.updatedAt.toIso8601String(),
+    };
+
 UpdateUserDto _$UpdateUserDtoFromJson(Map<String, dynamic> json) =>
     UpdateUserDto(
       username: json['username'] as String?,
@@ -42,9 +58,56 @@ Map<String, dynamic> _$UpdateUserDtoToJson(UpdateUserDto instance) =>
       'avatarKey': instance.avatarKey,
     };
 
-RoleDto _$RoleDtoFromJson(Map<String, dynamic> json) => RoleDto();
+PutAvatarDto _$PutAvatarDtoFromJson(Map<String, dynamic> json) => PutAvatarDto(
+      file: json['file'] as String,
+    );
 
-Map<String, dynamic> _$RoleDtoToJson(RoleDto instance) => <String, dynamic>{};
+Map<String, dynamic> _$PutAvatarDtoToJson(PutAvatarDto instance) =>
+    <String, dynamic>{
+      'file': instance.file,
+    };
+
+PutAvatarImageResponseDto _$PutAvatarImageResponseDtoFromJson(
+        Map<String, dynamic> json) =>
+    PutAvatarImageResponseDto(
+      isUpdated: json['isUpdated'] as bool,
+    );
+
+Map<String, dynamic> _$PutAvatarImageResponseDtoToJson(
+        PutAvatarImageResponseDto instance) =>
+    <String, dynamic>{
+      'isUpdated': instance.isUpdated,
+    };
+
+DeleteAvatarDto _$DeleteAvatarDtoFromJson(Map<String, dynamic> json) =>
+    DeleteAvatarDto(
+      file: json['file'] as String,
+    );
+
+Map<String, dynamic> _$DeleteAvatarDtoToJson(DeleteAvatarDto instance) =>
+    <String, dynamic>{
+      'file': instance.file,
+    };
+
+DeleteAvatarResponseDto _$DeleteAvatarResponseDtoFromJson(
+        Map<String, dynamic> json) =>
+    DeleteAvatarResponseDto(
+      isDeleted: json['isDeleted'] as bool,
+    );
+
+Map<String, dynamic> _$DeleteAvatarResponseDtoToJson(
+        DeleteAvatarResponseDto instance) =>
+    <String, dynamic>{
+      'isDeleted': instance.isDeleted,
+    };
+
+RoleDto _$RoleDtoFromJson(Map<String, dynamic> json) => RoleDto(
+      role: json['role'] as String,
+    );
+
+Map<String, dynamic> _$RoleDtoToJson(RoleDto instance) => <String, dynamic>{
+      'role': instance.role,
+    };
 
 LoginDto _$LoginDtoFromJson(Map<String, dynamic> json) => LoginDto(
       username: json['username'] as String,
@@ -79,22 +142,6 @@ Map<String, dynamic> _$RegisterDtoToJson(RegisterDto instance) =>
       'username': instance.username,
       'email': instance.email,
       'password': instance.password,
-    };
-
-UserDto _$UserDtoFromJson(Map<String, dynamic> json) => UserDto(
-      username: json['username'] as String,
-      isActive: json['isActive'] as bool,
-      avatarUrl: json['avatarUrl'] as String?,
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      updatedAt: DateTime.parse(json['updatedAt'] as String),
-    );
-
-Map<String, dynamic> _$UserDtoToJson(UserDto instance) => <String, dynamic>{
-      'username': instance.username,
-      'isActive': instance.isActive,
-      'avatarUrl': instance.avatarUrl,
-      'createdAt': instance.createdAt.toIso8601String(),
-      'updatedAt': instance.updatedAt.toIso8601String(),
     };
 
 CreateHabitDto _$CreateHabitDtoFromJson(Map<String, dynamic> json) =>

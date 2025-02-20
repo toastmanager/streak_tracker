@@ -9,8 +9,6 @@ model User {
     habits       Habit[]
     activities   Activity[]
 
-    avatarKey String? @map("avatar_key")
-
     createdAt DateTime @default(now()) @map("created_at")
     updatedAt DateTime @updatedAt @map("updated_at")
 

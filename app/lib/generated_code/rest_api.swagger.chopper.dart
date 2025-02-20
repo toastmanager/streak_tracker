@@ -18,7 +18,7 @@ final class _$RestApi extends RestApi {
   final Type definitionType = RestApi;
 
   @override
-  Future<Response<dynamic>> _apiV1UsersPost({required CreateUserDto? body}) {
+  Future<Response<UserDto>> _apiV1UsersPost({required CreateUserDto? body}) {
     final Uri $url = Uri.parse('/api/v1/users');
     final $body = body;
     final Request $request = Request(
@@ -27,33 +27,33 @@ final class _$RestApi extends RestApi {
       client.baseUrl,
       body: $body,
     );
-    return client.send<dynamic, dynamic>($request);
+    return client.send<UserDto, UserDto>($request);
   }
 
   @override
-  Future<Response<dynamic>> _apiV1UsersGet() {
+  Future<Response<List<UserDto>>> _apiV1UsersGet() {
     final Uri $url = Uri.parse('/api/v1/users');
     final Request $request = Request(
       'GET',
       $url,
       client.baseUrl,
     );
-    return client.send<dynamic, dynamic>($request);
+    return client.send<List<UserDto>, UserDto>($request);
   }
 
   @override
-  Future<Response<dynamic>> _apiV1UsersIdGet({required String? id}) {
+  Future<Response<UserDto>> _apiV1UsersIdGet({required String? id}) {
     final Uri $url = Uri.parse('/api/v1/users/${id}');
     final Request $request = Request(
       'GET',
       $url,
       client.baseUrl,
     );
-    return client.send<dynamic, dynamic>($request);
+    return client.send<UserDto, UserDto>($request);
   }
 
   @override
-  Future<Response<dynamic>> _apiV1UsersIdPatch({
+  Future<Response<UserDto>> _apiV1UsersIdPatch({
     required String? id,
     required UpdateUserDto? body,
   }) {
@@ -65,22 +65,68 @@ final class _$RestApi extends RestApi {
       client.baseUrl,
       body: $body,
     );
-    return client.send<dynamic, dynamic>($request);
+    return client.send<UserDto, UserDto>($request);
   }
 
   @override
-  Future<Response<dynamic>> _apiV1UsersIdDelete({required String? id}) {
+  Future<Response<UserDto>> _apiV1UsersIdDelete({required String? id}) {
     final Uri $url = Uri.parse('/api/v1/users/${id}');
     final Request $request = Request(
       'DELETE',
       $url,
       client.baseUrl,
     );
-    return client.send<dynamic, dynamic>($request);
+    return client.send<UserDto, UserDto>($request);
   }
 
   @override
-  Future<Response<dynamic>> _apiV1UsersIdRolesPost({
+  Future<Response<PutAvatarImageResponseDto>> _apiV1UsersIdAvatarPut({
+    required String? id,
+    required PutAvatarDto body,
+  }) {
+    final Uri $url = Uri.parse('/api/v1/users/${id}/avatar');
+    final List<PartValue> $parts = <PartValue>[
+      PartValue<PutAvatarDto>(
+        'body',
+        body,
+      )
+    ];
+    final Request $request = Request(
+      'PUT',
+      $url,
+      client.baseUrl,
+      parts: $parts,
+      multipart: true,
+    );
+    return client
+        .send<PutAvatarImageResponseDto, PutAvatarImageResponseDto>($request);
+  }
+
+  @override
+  Future<Response<DeleteAvatarResponseDto>> _apiV1UsersIdAvatarDelete({
+    required String? id,
+    required DeleteAvatarDto body,
+  }) {
+    final Uri $url = Uri.parse('/api/v1/users/${id}/avatar');
+    final List<PartValue> $parts = <PartValue>[
+      PartValue<DeleteAvatarDto>(
+        'body',
+        body,
+      )
+    ];
+    final Request $request = Request(
+      'DELETE',
+      $url,
+      client.baseUrl,
+      parts: $parts,
+      multipart: true,
+    );
+    return client
+        .send<DeleteAvatarResponseDto, DeleteAvatarResponseDto>($request);
+  }
+
+  @override
+  Future<Response<UserDto>> _apiV1UsersIdRolesPost({
     required String? id,
     required RoleDto? body,
   }) {
@@ -92,11 +138,11 @@ final class _$RestApi extends RestApi {
       client.baseUrl,
       body: $body,
     );
-    return client.send<dynamic, dynamic>($request);
+    return client.send<UserDto, UserDto>($request);
   }
 
   @override
-  Future<Response<dynamic>> _apiV1UsersIdRolesDelete({
+  Future<Response<RoleDto>> _apiV1UsersIdRolesDelete({
     required String? id,
     required RoleDto? body,
   }) {
@@ -108,18 +154,18 @@ final class _$RestApi extends RestApi {
       client.baseUrl,
       body: $body,
     );
-    return client.send<dynamic, dynamic>($request);
+    return client.send<RoleDto, RoleDto>($request);
   }
 
   @override
-  Future<Response<dynamic>> _apiV1UsersIdRolesGet({required String? id}) {
+  Future<Response<List<RoleDto>>> _apiV1UsersIdRolesGet({required String? id}) {
     final Uri $url = Uri.parse('/api/v1/users/${id}/roles');
     final Request $request = Request(
       'GET',
       $url,
       client.baseUrl,
     );
-    return client.send<dynamic, dynamic>($request);
+    return client.send<List<RoleDto>, RoleDto>($request);
   }
 
   @override
