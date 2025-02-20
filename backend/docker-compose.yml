@@ -1,24 +1,24 @@
 services:
   backend:
     build:
-      context: ./backend
+      context: .
       dockerfile: ./Dockerfile
     env_file:
-      - ./backend/.env
+      - .env
     environment:
       NODE_ENV: production
       DATABASE_URL: postgresql://${DB_USER}:${DB_PASS}@db:5432/${DB_NAME}?schema=public
       PORT: 8000
     expose:
       - 8000
-    deploy:
-      mode: replicas
-      replicas: 3
-      update_config:
-        parallelism: 2
-        delay: 10s
-        order: start-first
-        failure_action: rollback
+    # deploy:
+    #   mode: replicas
+    #   replicas: 3
+    #   update_config:
+    #     parallelism: 2
+    #     delay: 10s
+    #     order: start-first
+    #     failure_action: rollback
     depends_on:
       db:
         condition: service_healthy
