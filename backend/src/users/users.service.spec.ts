@@ -4,6 +4,7 @@ import { PrismaService } from '../prisma.service';
 import { DeepMockProxy, mockDeep } from 'jest-mock-extended';
 import { PrismaClient, User } from '@prisma/client';
 import { CreateUserDto } from './dto/create-user.dto';
+import { AvatarsStorage } from './avatars.storage';
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -11,10 +12,12 @@ describe('UsersService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [UsersService, PrismaService],
+      providers: [UsersService, PrismaService, AvatarsStorage],
     })
       .overrideProvider(PrismaService)
       .useValue(mockDeep<PrismaClient>())
+      .overrideProvider(AvatarsStorage)
+      .useValue(mockDeep<AvatarsStorage>())
       .compile();
 
     service = module.get<UsersService>(UsersService);
@@ -44,7 +47,6 @@ describe('UsersService', () => {
       isActive: true,
       createdAt: new Date(),
       updatedAt: new Date(),
-      avatarKey: null,
       roles: [],
     };
 

@@ -81,7 +81,7 @@ class HabitFormScreen extends StatelessWidget {
               color: colors.onSurfaceVariant,
             ),
           ),
-          if (errorMessage != null && errorMessage != "") ...[
+          if (errorMessage != null && errorMessage != '') ...[
             const SizedBox(height: 8),
             Text(
               errorMessage!,

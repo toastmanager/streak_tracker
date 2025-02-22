@@ -44,5 +44,6 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-.cookies
-.env
+/android/app/.cxx
+.env*
+!.env.example

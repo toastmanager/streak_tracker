@@ -1,7 +1,9 @@
-import { Role } from '@prisma/client';
+import { ApiProperty } from '@nestjs/swagger';
+import { $Enums } from '@prisma/client';
 import { IsEnum } from 'class-validator';
 
 export class RoleDto {
-  @IsEnum(Role)
-  role: Role;
+  @ApiProperty()
+  @IsEnum($Enums.Role)
+  role: $Enums.Role;
 }

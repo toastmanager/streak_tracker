@@ -13,7 +13,6 @@ class CreateUserDto {
     required this.email,
     required this.passwordHash,
     this.isActive,
-    this.avatarKey,
   });
 
   factory CreateUserDto.fromJson(Map<String, dynamic> json) =>
@@ -30,8 +29,6 @@ class CreateUserDto {
   final String passwordHash;
   @JsonKey(name: 'isActive')
   final bool? isActive;
-  @JsonKey(name: 'avatarKey')
-  final String? avatarKey;
   static const fromJsonFactory = _$CreateUserDtoFromJson;
 
   @override
@@ -48,10 +45,7 @@ class CreateUserDto {
                     .equals(other.passwordHash, passwordHash)) &&
             (identical(other.isActive, isActive) ||
                 const DeepCollectionEquality()
-                    .equals(other.isActive, isActive)) &&
-            (identical(other.avatarKey, avatarKey) ||
-                const DeepCollectionEquality()
-                    .equals(other.avatarKey, avatarKey)));
+                    .equals(other.isActive, isActive)));
   }
 
   @override
@@ -63,38 +57,132 @@ class CreateUserDto {
       const DeepCollectionEquality().hash(email) ^
       const DeepCollectionEquality().hash(passwordHash) ^
       const DeepCollectionEquality().hash(isActive) ^
-      const DeepCollectionEquality().hash(avatarKey) ^
       runtimeType.hashCode;
 }
 
 extension $CreateUserDtoExtension on CreateUserDto {
   CreateUserDto copyWith(
-      {String? username,
-      String? email,
-      String? passwordHash,
-      bool? isActive,
-      String? avatarKey}) {
+      {String? username, String? email, String? passwordHash, bool? isActive}) {
     return CreateUserDto(
         username: username ?? this.username,
         email: email ?? this.email,
         passwordHash: passwordHash ?? this.passwordHash,
-        isActive: isActive ?? this.isActive,
-        avatarKey: avatarKey ?? this.avatarKey);
+        isActive: isActive ?? this.isActive);
   }
 
   CreateUserDto copyWithWrapped(
       {Wrapped<String>? username,
       Wrapped<String>? email,
       Wrapped<String>? passwordHash,
-      Wrapped<bool?>? isActive,
-      Wrapped<String?>? avatarKey}) {
+      Wrapped<bool?>? isActive}) {
     return CreateUserDto(
         username: (username != null ? username.value : this.username),
         email: (email != null ? email.value : this.email),
         passwordHash:
             (passwordHash != null ? passwordHash.value : this.passwordHash),
+        isActive: (isActive != null ? isActive.value : this.isActive));
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
+class UserDto {
+  const UserDto({
+    required this.id,
+    required this.username,
+    required this.isActive,
+    this.avatarUrl,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  factory UserDto.fromJson(Map<String, dynamic> json) =>
+      _$UserDtoFromJson(json);
+
+  static const toJsonFactory = _$UserDtoToJson;
+  Map<String, dynamic> toJson() => _$UserDtoToJson(this);
+
+  @JsonKey(name: 'id')
+  final int id;
+  @JsonKey(name: 'username')
+  final String username;
+  @JsonKey(name: 'isActive')
+  final bool isActive;
+  @JsonKey(name: 'avatarUrl')
+  final String? avatarUrl;
+  @JsonKey(name: 'createdAt')
+  final DateTime createdAt;
+  @JsonKey(name: 'updatedAt')
+  final DateTime updatedAt;
+  static const fromJsonFactory = _$UserDtoFromJson;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other is UserDto &&
+            (identical(other.id, id) ||
+                const DeepCollectionEquality().equals(other.id, id)) &&
+            (identical(other.username, username) ||
+                const DeepCollectionEquality()
+                    .equals(other.username, username)) &&
+            (identical(other.isActive, isActive) ||
+                const DeepCollectionEquality()
+                    .equals(other.isActive, isActive)) &&
+            (identical(other.avatarUrl, avatarUrl) ||
+                const DeepCollectionEquality()
+                    .equals(other.avatarUrl, avatarUrl)) &&
+            (identical(other.createdAt, createdAt) ||
+                const DeepCollectionEquality()
+                    .equals(other.createdAt, createdAt)) &&
+            (identical(other.updatedAt, updatedAt) ||
+                const DeepCollectionEquality()
+                    .equals(other.updatedAt, updatedAt)));
+  }
+
+  @override
+  String toString() => jsonEncode(this);
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(id) ^
+      const DeepCollectionEquality().hash(username) ^
+      const DeepCollectionEquality().hash(isActive) ^
+      const DeepCollectionEquality().hash(avatarUrl) ^
+      const DeepCollectionEquality().hash(createdAt) ^
+      const DeepCollectionEquality().hash(updatedAt) ^
+      runtimeType.hashCode;
+}
+
+extension $UserDtoExtension on UserDto {
+  UserDto copyWith(
+      {int? id,
+      String? username,
+      bool? isActive,
+      String? avatarUrl,
+      DateTime? createdAt,
+      DateTime? updatedAt}) {
+    return UserDto(
+        id: id ?? this.id,
+        username: username ?? this.username,
+        isActive: isActive ?? this.isActive,
+        avatarUrl: avatarUrl ?? this.avatarUrl,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt);
+  }
+
+  UserDto copyWithWrapped(
+      {Wrapped<int>? id,
+      Wrapped<String>? username,
+      Wrapped<bool>? isActive,
+      Wrapped<String?>? avatarUrl,
+      Wrapped<DateTime>? createdAt,
+      Wrapped<DateTime>? updatedAt}) {
+    return UserDto(
+        id: (id != null ? id.value : this.id),
+        username: (username != null ? username.value : this.username),
         isActive: (isActive != null ? isActive.value : this.isActive),
-        avatarKey: (avatarKey != null ? avatarKey.value : this.avatarKey));
+        avatarUrl: (avatarUrl != null ? avatarUrl.value : this.avatarUrl),
+        createdAt: (createdAt != null ? createdAt.value : this.createdAt),
+        updatedAt: (updatedAt != null ? updatedAt.value : this.updatedAt));
   }
 }
 
@@ -105,7 +193,6 @@ class UpdateUserDto {
     this.email,
     this.passwordHash,
     this.isActive,
-    this.avatarKey,
   });
 
   factory UpdateUserDto.fromJson(Map<String, dynamic> json) =>
@@ -122,8 +209,6 @@ class UpdateUserDto {
   final String? passwordHash;
   @JsonKey(name: 'isActive')
   final bool? isActive;
-  @JsonKey(name: 'avatarKey')
-  final String? avatarKey;
   static const fromJsonFactory = _$UpdateUserDtoFromJson;
 
   @override
@@ -140,10 +225,7 @@ class UpdateUserDto {
                     .equals(other.passwordHash, passwordHash)) &&
             (identical(other.isActive, isActive) ||
                 const DeepCollectionEquality()
-                    .equals(other.isActive, isActive)) &&
-            (identical(other.avatarKey, avatarKey) ||
-                const DeepCollectionEquality()
-                    .equals(other.avatarKey, avatarKey)));
+                    .equals(other.isActive, isActive)));
   }
 
   @override
@@ -155,44 +237,126 @@ class UpdateUserDto {
       const DeepCollectionEquality().hash(email) ^
       const DeepCollectionEquality().hash(passwordHash) ^
       const DeepCollectionEquality().hash(isActive) ^
-      const DeepCollectionEquality().hash(avatarKey) ^
       runtimeType.hashCode;
 }
 
 extension $UpdateUserDtoExtension on UpdateUserDto {
   UpdateUserDto copyWith(
-      {String? username,
-      String? email,
-      String? passwordHash,
-      bool? isActive,
-      String? avatarKey}) {
+      {String? username, String? email, String? passwordHash, bool? isActive}) {
     return UpdateUserDto(
         username: username ?? this.username,
         email: email ?? this.email,
         passwordHash: passwordHash ?? this.passwordHash,
-        isActive: isActive ?? this.isActive,
-        avatarKey: avatarKey ?? this.avatarKey);
+        isActive: isActive ?? this.isActive);
   }
 
   UpdateUserDto copyWithWrapped(
       {Wrapped<String?>? username,
       Wrapped<String?>? email,
       Wrapped<String?>? passwordHash,
-      Wrapped<bool?>? isActive,
-      Wrapped<String?>? avatarKey}) {
+      Wrapped<bool?>? isActive}) {
     return UpdateUserDto(
         username: (username != null ? username.value : this.username),
         email: (email != null ? email.value : this.email),
         passwordHash:
             (passwordHash != null ? passwordHash.value : this.passwordHash),
-        isActive: (isActive != null ? isActive.value : this.isActive),
-        avatarKey: (avatarKey != null ? avatarKey.value : this.avatarKey));
+        isActive: (isActive != null ? isActive.value : this.isActive));
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
+class PutAvatarResponseDto {
+  const PutAvatarResponseDto({
+    required this.isUpdated,
+  });
+
+  factory PutAvatarResponseDto.fromJson(Map<String, dynamic> json) =>
+      _$PutAvatarResponseDtoFromJson(json);
+
+  static const toJsonFactory = _$PutAvatarResponseDtoToJson;
+  Map<String, dynamic> toJson() => _$PutAvatarResponseDtoToJson(this);
+
+  @JsonKey(name: 'isUpdated')
+  final bool isUpdated;
+  static const fromJsonFactory = _$PutAvatarResponseDtoFromJson;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other is PutAvatarResponseDto &&
+            (identical(other.isUpdated, isUpdated) ||
+                const DeepCollectionEquality()
+                    .equals(other.isUpdated, isUpdated)));
+  }
+
+  @override
+  String toString() => jsonEncode(this);
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(isUpdated) ^ runtimeType.hashCode;
+}
+
+extension $PutAvatarResponseDtoExtension on PutAvatarResponseDto {
+  PutAvatarResponseDto copyWith({bool? isUpdated}) {
+    return PutAvatarResponseDto(isUpdated: isUpdated ?? this.isUpdated);
+  }
+
+  PutAvatarResponseDto copyWithWrapped({Wrapped<bool>? isUpdated}) {
+    return PutAvatarResponseDto(
+        isUpdated: (isUpdated != null ? isUpdated.value : this.isUpdated));
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
+class DeleteAvatarResponseDto {
+  const DeleteAvatarResponseDto({
+    required this.isDeleted,
+  });
+
+  factory DeleteAvatarResponseDto.fromJson(Map<String, dynamic> json) =>
+      _$DeleteAvatarResponseDtoFromJson(json);
+
+  static const toJsonFactory = _$DeleteAvatarResponseDtoToJson;
+  Map<String, dynamic> toJson() => _$DeleteAvatarResponseDtoToJson(this);
+
+  @JsonKey(name: 'isDeleted')
+  final bool isDeleted;
+  static const fromJsonFactory = _$DeleteAvatarResponseDtoFromJson;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other is DeleteAvatarResponseDto &&
+            (identical(other.isDeleted, isDeleted) ||
+                const DeepCollectionEquality()
+                    .equals(other.isDeleted, isDeleted)));
+  }
+
+  @override
+  String toString() => jsonEncode(this);
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(isDeleted) ^ runtimeType.hashCode;
+}
+
+extension $DeleteAvatarResponseDtoExtension on DeleteAvatarResponseDto {
+  DeleteAvatarResponseDto copyWith({bool? isDeleted}) {
+    return DeleteAvatarResponseDto(isDeleted: isDeleted ?? this.isDeleted);
+  }
+
+  DeleteAvatarResponseDto copyWithWrapped({Wrapped<bool>? isDeleted}) {
+    return DeleteAvatarResponseDto(
+        isDeleted: (isDeleted != null ? isDeleted.value : this.isDeleted));
   }
 }
 
 @JsonSerializable(explicitToJson: true)
 class RoleDto {
-  const RoleDto();
+  const RoleDto({
+    required this.role,
+  });
 
   factory RoleDto.fromJson(Map<String, dynamic> json) =>
       _$RoleDtoFromJson(json);
@@ -200,13 +364,34 @@ class RoleDto {
   static const toJsonFactory = _$RoleDtoToJson;
   Map<String, dynamic> toJson() => _$RoleDtoToJson(this);
 
+  @JsonKey(name: 'role')
+  final String role;
   static const fromJsonFactory = _$RoleDtoFromJson;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other is RoleDto &&
+            (identical(other.role, role) ||
+                const DeepCollectionEquality().equals(other.role, role)));
+  }
 
   @override
   String toString() => jsonEncode(this);
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode =>
+      const DeepCollectionEquality().hash(role) ^ runtimeType.hashCode;
+}
+
+extension $RoleDtoExtension on RoleDto {
+  RoleDto copyWith({String? role}) {
+    return RoleDto(role: role ?? this.role);
+  }
+
+  RoleDto copyWithWrapped({Wrapped<String>? role}) {
+    return RoleDto(role: (role != null ? role.value : this.role));
+  }
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -402,21 +587,25 @@ extension $RegisterDtoExtension on RegisterDto {
 }
 
 @JsonSerializable(explicitToJson: true)
-class UserDto {
-  const UserDto({
+class UserSensitiveDto {
+  const UserSensitiveDto({
+    required this.id,
     required this.username,
     required this.isActive,
     this.avatarUrl,
     required this.createdAt,
     required this.updatedAt,
+    required this.email,
   });
 
-  factory UserDto.fromJson(Map<String, dynamic> json) =>
-      _$UserDtoFromJson(json);
+  factory UserSensitiveDto.fromJson(Map<String, dynamic> json) =>
+      _$UserSensitiveDtoFromJson(json);
 
-  static const toJsonFactory = _$UserDtoToJson;
-  Map<String, dynamic> toJson() => _$UserDtoToJson(this);
+  static const toJsonFactory = _$UserSensitiveDtoToJson;
+  Map<String, dynamic> toJson() => _$UserSensitiveDtoToJson(this);
 
+  @JsonKey(name: 'id')
+  final int id;
   @JsonKey(name: 'username')
   final String username;
   @JsonKey(name: 'isActive')
@@ -427,12 +616,16 @@ class UserDto {
   final DateTime createdAt;
   @JsonKey(name: 'updatedAt')
   final DateTime updatedAt;
-  static const fromJsonFactory = _$UserDtoFromJson;
+  @JsonKey(name: 'email')
+  final String email;
+  static const fromJsonFactory = _$UserSensitiveDtoFromJson;
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other is UserDto &&
+        (other is UserSensitiveDto &&
+            (identical(other.id, id) ||
+                const DeepCollectionEquality().equals(other.id, id)) &&
             (identical(other.username, username) ||
                 const DeepCollectionEquality()
                     .equals(other.username, username)) &&
@@ -447,7 +640,92 @@ class UserDto {
                     .equals(other.createdAt, createdAt)) &&
             (identical(other.updatedAt, updatedAt) ||
                 const DeepCollectionEquality()
-                    .equals(other.updatedAt, updatedAt)));
+                    .equals(other.updatedAt, updatedAt)) &&
+            (identical(other.email, email) ||
+                const DeepCollectionEquality().equals(other.email, email)));
+  }
+
+  @override
+  String toString() => jsonEncode(this);
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(id) ^
+      const DeepCollectionEquality().hash(username) ^
+      const DeepCollectionEquality().hash(isActive) ^
+      const DeepCollectionEquality().hash(avatarUrl) ^
+      const DeepCollectionEquality().hash(createdAt) ^
+      const DeepCollectionEquality().hash(updatedAt) ^
+      const DeepCollectionEquality().hash(email) ^
+      runtimeType.hashCode;
+}
+
+extension $UserSensitiveDtoExtension on UserSensitiveDto {
+  UserSensitiveDto copyWith(
+      {int? id,
+      String? username,
+      bool? isActive,
+      String? avatarUrl,
+      DateTime? createdAt,
+      DateTime? updatedAt,
+      String? email}) {
+    return UserSensitiveDto(
+        id: id ?? this.id,
+        username: username ?? this.username,
+        isActive: isActive ?? this.isActive,
+        avatarUrl: avatarUrl ?? this.avatarUrl,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        email: email ?? this.email);
+  }
+
+  UserSensitiveDto copyWithWrapped(
+      {Wrapped<int>? id,
+      Wrapped<String>? username,
+      Wrapped<bool>? isActive,
+      Wrapped<String?>? avatarUrl,
+      Wrapped<DateTime>? createdAt,
+      Wrapped<DateTime>? updatedAt,
+      Wrapped<String>? email}) {
+    return UserSensitiveDto(
+        id: (id != null ? id.value : this.id),
+        username: (username != null ? username.value : this.username),
+        isActive: (isActive != null ? isActive.value : this.isActive),
+        avatarUrl: (avatarUrl != null ? avatarUrl.value : this.avatarUrl),
+        createdAt: (createdAt != null ? createdAt.value : this.createdAt),
+        updatedAt: (updatedAt != null ? updatedAt.value : this.updatedAt),
+        email: (email != null ? email.value : this.email));
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
+class UpdateMeDto {
+  const UpdateMeDto({
+    required this.username,
+    required this.email,
+  });
+
+  factory UpdateMeDto.fromJson(Map<String, dynamic> json) =>
+      _$UpdateMeDtoFromJson(json);
+
+  static const toJsonFactory = _$UpdateMeDtoToJson;
+  Map<String, dynamic> toJson() => _$UpdateMeDtoToJson(this);
+
+  @JsonKey(name: 'username')
+  final String username;
+  @JsonKey(name: 'email')
+  final String email;
+  static const fromJsonFactory = _$UpdateMeDtoFromJson;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other is UpdateMeDto &&
+            (identical(other.username, username) ||
+                const DeepCollectionEquality()
+                    .equals(other.username, username)) &&
+            (identical(other.email, email) ||
+                const DeepCollectionEquality().equals(other.email, email)));
   }
 
   @override
@@ -456,40 +734,21 @@ class UserDto {
   @override
   int get hashCode =>
       const DeepCollectionEquality().hash(username) ^
-      const DeepCollectionEquality().hash(isActive) ^
-      const DeepCollectionEquality().hash(avatarUrl) ^
-      const DeepCollectionEquality().hash(createdAt) ^
-      const DeepCollectionEquality().hash(updatedAt) ^
+      const DeepCollectionEquality().hash(email) ^
       runtimeType.hashCode;
 }
 
-extension $UserDtoExtension on UserDto {
-  UserDto copyWith(
-      {String? username,
-      bool? isActive,
-      String? avatarUrl,
-      DateTime? createdAt,
-      DateTime? updatedAt}) {
-    return UserDto(
-        username: username ?? this.username,
-        isActive: isActive ?? this.isActive,
-        avatarUrl: avatarUrl ?? this.avatarUrl,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt);
+extension $UpdateMeDtoExtension on UpdateMeDto {
+  UpdateMeDto copyWith({String? username, String? email}) {
+    return UpdateMeDto(
+        username: username ?? this.username, email: email ?? this.email);
   }
 
-  UserDto copyWithWrapped(
-      {Wrapped<String>? username,
-      Wrapped<bool>? isActive,
-      Wrapped<String?>? avatarUrl,
-      Wrapped<DateTime>? createdAt,
-      Wrapped<DateTime>? updatedAt}) {
-    return UserDto(
+  UpdateMeDto copyWithWrapped(
+      {Wrapped<String>? username, Wrapped<String>? email}) {
+    return UpdateMeDto(
         username: (username != null ? username.value : this.username),
-        isActive: (isActive != null ? isActive.value : this.isActive),
-        avatarUrl: (avatarUrl != null ? avatarUrl.value : this.avatarUrl),
-        createdAt: (createdAt != null ? createdAt.value : this.createdAt),
-        updatedAt: (updatedAt != null ? updatedAt.value : this.updatedAt));
+        email: (email != null ? email.value : this.email));
   }
 }
 
@@ -889,6 +1148,98 @@ extension $TodayActivityDtoExtension on TodayActivityDto {
     return TodayActivityDto(
         isDoneToday:
             (isDoneToday != null ? isDoneToday.value : this.isDoneToday));
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
+class ApiV1UsersIdAvatarPut$RequestBody {
+  const ApiV1UsersIdAvatarPut$RequestBody({
+    this.file,
+  });
+
+  factory ApiV1UsersIdAvatarPut$RequestBody.fromJson(
+          Map<String, dynamic> json) =>
+      _$ApiV1UsersIdAvatarPut$RequestBodyFromJson(json);
+
+  static const toJsonFactory = _$ApiV1UsersIdAvatarPut$RequestBodyToJson;
+  Map<String, dynamic> toJson() =>
+      _$ApiV1UsersIdAvatarPut$RequestBodyToJson(this);
+
+  @JsonKey(name: 'file')
+  final String? file;
+  static const fromJsonFactory = _$ApiV1UsersIdAvatarPut$RequestBodyFromJson;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other is ApiV1UsersIdAvatarPut$RequestBody &&
+            (identical(other.file, file) ||
+                const DeepCollectionEquality().equals(other.file, file)));
+  }
+
+  @override
+  String toString() => jsonEncode(this);
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(file) ^ runtimeType.hashCode;
+}
+
+extension $ApiV1UsersIdAvatarPut$RequestBodyExtension
+    on ApiV1UsersIdAvatarPut$RequestBody {
+  ApiV1UsersIdAvatarPut$RequestBody copyWith({String? file}) {
+    return ApiV1UsersIdAvatarPut$RequestBody(file: file ?? this.file);
+  }
+
+  ApiV1UsersIdAvatarPut$RequestBody copyWithWrapped({Wrapped<String?>? file}) {
+    return ApiV1UsersIdAvatarPut$RequestBody(
+        file: (file != null ? file.value : this.file));
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
+class ApiV1AuthMeAvatarPut$RequestBody {
+  const ApiV1AuthMeAvatarPut$RequestBody({
+    this.file,
+  });
+
+  factory ApiV1AuthMeAvatarPut$RequestBody.fromJson(
+          Map<String, dynamic> json) =>
+      _$ApiV1AuthMeAvatarPut$RequestBodyFromJson(json);
+
+  static const toJsonFactory = _$ApiV1AuthMeAvatarPut$RequestBodyToJson;
+  Map<String, dynamic> toJson() =>
+      _$ApiV1AuthMeAvatarPut$RequestBodyToJson(this);
+
+  @JsonKey(name: 'file')
+  final String? file;
+  static const fromJsonFactory = _$ApiV1AuthMeAvatarPut$RequestBodyFromJson;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other is ApiV1AuthMeAvatarPut$RequestBody &&
+            (identical(other.file, file) ||
+                const DeepCollectionEquality().equals(other.file, file)));
+  }
+
+  @override
+  String toString() => jsonEncode(this);
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(file) ^ runtimeType.hashCode;
+}
+
+extension $ApiV1AuthMeAvatarPut$RequestBodyExtension
+    on ApiV1AuthMeAvatarPut$RequestBody {
+  ApiV1AuthMeAvatarPut$RequestBody copyWith({String? file}) {
+    return ApiV1AuthMeAvatarPut$RequestBody(file: file ?? this.file);
+  }
+
+  ApiV1AuthMeAvatarPut$RequestBody copyWithWrapped({Wrapped<String?>? file}) {
+    return ApiV1AuthMeAvatarPut$RequestBody(
+        file: (file != null ? file.value : this.file));
   }
 }
 

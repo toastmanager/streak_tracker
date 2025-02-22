@@ -5,3 +5,7 @@
 example.com {
     reverse_proxy backend
 }
+
+storage.example.com {
+    reverse_proxy backend
+}

@@ -2,7 +2,7 @@ import 'dart:async' show FutureOr;
 import 'dart:io' show HttpHeaders, HttpStatus;
 
 import 'package:app/core/constants/env_constants.dart';
-import 'package:app/features/auth/data/datasources/auth_token_service.dart';
+import 'package:app/features/auth/data/utils/auth_token_service.dart';
 import 'package:app/generated_code/rest_api.swagger.dart';
 import 'package:app/injection.dart';
 import 'package:chopper/chopper.dart';
@@ -15,7 +15,7 @@ class CookieInterceptor implements Interceptor {
 
   const CookieInterceptor({required this.prefs});
 
-  static const String _cookieKey = "cookies";
+  static const String _cookieKey = 'cookies';
 
   @override
   FutureOr<Response<BodyType>> intercept<BodyType>(
@@ -23,7 +23,7 @@ class CookieInterceptor implements Interceptor {
     Request request = chain.request;
 
     // Retrieve stored cookies and attach them to the request
-    final storedCookies = prefs.getString(_cookieKey) ?? "";
+    final storedCookies = prefs.getString(_cookieKey) ?? '';
     if (storedCookies.isNotEmpty) {
       request = request.copyWith(
         headers: {...request.headers, 'Cookie': storedCookies},
@@ -54,7 +54,7 @@ class AccessTokenInterceptor implements Interceptor {
       Chain<BodyType> chain) async {
     Request request = chain.request;
 
-    final authorizationHeader = authTokenService.getAuthorizationHeader() ?? "";
+    final authorizationHeader = authTokenService.getAuthorizationHeader() ?? '';
     request = request.copyWith(
       headers: {
         ...request.headers,
@@ -87,7 +87,7 @@ class AuthInterceptor extends Authenticator {
       if (newToken != null) {
         _refreshAttempts = 0;
         final authorizationHeader =
-            sl<AuthTokenService>().getAuthorizationHeader() ?? "";
+            sl<AuthTokenService>().getAuthorizationHeader() ?? '';
         return request.copyWith(headers: {
           ...request.headers,
           HttpHeaders.authorizationHeader: authorizationHeader,

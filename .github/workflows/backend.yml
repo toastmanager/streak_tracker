@@ -1,14 +1,11 @@
 on:
-  pull_request:
-    branches:
-      - main
   push:
     branches:
       - main
 
 jobs:
   test:
-    name: Run tests and build
+    name: Run tests and try to build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -37,4 +34,5 @@ jobs:
             cd ${{ secrets.WORK_DIR }}
             git checkout ${{ secrets.DEPLOYMENT_BRANCH }}
             git pull
+            cd backend
             docker compose up -d --build backend

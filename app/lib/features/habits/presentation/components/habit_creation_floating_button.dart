@@ -54,15 +54,15 @@ class HabitCreationFloatingButton extends StatelessWidget {
                       if (context.mounted) {
                         context.read<HabitsCubit>().getHabits();
                         setState(() {
-                          titleController.text = "";
-                          maxGapDaysController.text = "";
+                          titleController.text = '';
+                          maxGapDaysController.text = '';
                           enabled = true;
                         });
                         Navigator.pop(context);
                       }
                     } catch (e) {
                       setState(() => activityCreationFormErrorMessage =
-                          "Непредвиденная ошибка создания привычки");
+                          'Непредвиденная ошибка создания привычки');
                     }
                   },
                 ),

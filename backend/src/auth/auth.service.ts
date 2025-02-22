@@ -158,7 +158,6 @@ export class AuthService {
       email: user.email,
       username: user.username,
       isActive: user.isActive,
-      avatarKey: user.avatarKey,
     };
     return await this.jwtService.signAsync(payload, {
       subject: user.id.toString(),

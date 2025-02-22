@@ -1,10 +1,16 @@
+import 'dart:io';
+
 import 'package:app/core/components/avatar.dart';
 import 'package:app/features/auth/domain/cubit/auth_cubit.dart';
+import 'package:app/features/auth/domain/repositories/auth_repository.dart';
 import 'package:app/generated_code/rest_api.models.swagger.dart';
+import 'package:app/injection.dart';
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:image_picker/image_picker.dart';
 
 @RoutePage()
 class ProfileScreen extends StatefulWidget {
@@ -13,29 +19,58 @@ class ProfileScreen extends StatefulWidget {
     required this.user,
   });
 
-  final UserDto user;
+  final UserSensitiveDto user;
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  late final user = widget.user;
+  final formKey = GlobalKey<FormBuilderState>();
+  late UserSensitiveDto user = widget.user;
   late final usernameTextController =
       TextEditingController(text: user.username);
-  late final emailTextController =
-      TextEditingController(text: 'example@example.com');
+  late final emailTextController = TextEditingController(text: user.email);
+  final picker = ImagePicker();
+  String errorMessage = '';
   bool isEditing = false;
+  XFile? avatarFile;
+
+  void resetChanges() {
+    setState(() {
+      avatarFile = null;
+    });
+  }
 
   void switchIsEditing() {
+    resetChanges();
     setState(() => isEditing = !isEditing);
   }
 
   void cancelChanges() {
+    resetChanges();
     setState(() => isEditing = false);
   }
 
-  void confirmChanges() {
+  void confirmChanges() async {
+    try {
+      final updatedUser = await sl<AuthRepository>().updateMe(
+        UpdateMeDto(
+          username: usernameTextController.text,
+          email: emailTextController.text,
+        ),
+        avatarFile?.path,
+      );
+      setState(() {
+        user = updatedUser;
+        errorMessage = '';
+      });
+    } catch (e) {
+      setState(() {
+        errorMessage = e.toString();
+      });
+    }
+    resetChanges();
     setState(() => isEditing = false);
   }
 
@@ -113,7 +148,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     TextButton(
                       onPressed: () {
                         if (isEditing) {
-                          confirmChanges();
+                          if (formKey.currentState?.saveAndValidate() ?? true) {
+                            confirmChanges();
+                          }
                         } else {
                           switchIsEditing();
                         }
@@ -131,13 +168,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   cursor:
                       isEditing ? SystemMouseCursors.click : MouseCursor.defer,
                   child: GestureDetector(
-                    onTap: () {},
+                    onTap: () async {
+                      if (isEditing) {
+                        final pickedAvatarFile =
+                            await picker.pickImage(source: ImageSource.gallery);
+                        setState(() => avatarFile = pickedAvatarFile);
+                      }
+                    },
                     child: Column(
                       children: [
-                        Avatar(
-                          avatarUrl: user.avatarUrl,
-                          size: 80,
-                        ),
+                        isEditing && avatarFile != null
+                            ? ClipOval(
+                                child: Image.file(
+                                  width: 80,
+                                  height: 80,
+                                  File(avatarFile!.path),
+                                  fit: BoxFit.cover,
+                                ),
+                              )
+                            : Avatar(
+                                avatarUrl: user.avatarUrl,
+                                size: 80,
+                              ),
                         if (isEditing) ...[
                           const SizedBox(height: 8),
                           Text(
@@ -155,6 +207,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             const SizedBox(height: 20),
             FormBuilder(
+              key: formKey,
               child: Column(
                 children: [
                   FormBuilderTextField(
@@ -164,6 +217,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     decoration: InputDecoration(
                       label: Text('Псевдоним'),
                     ),
+                    validator: FormBuilderValidators.compose([
+                      FormBuilderValidators.required(),
+                      FormBuilderValidators.minLength(4),
+                    ]),
                   ),
                   const SizedBox(height: 12),
                   FormBuilderTextField(
@@ -173,7 +230,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     decoration: InputDecoration(
                       label: Text('Почта'),
                     ),
+                    validator: FormBuilderValidators.compose([
+                      FormBuilderValidators.required(),
+                      FormBuilderValidators.email(),
+                    ]),
                   ),
+                  if (errorMessage != '') SizedBox(height: 8),
+                  if (errorMessage != '')
+                    Text(
+                      errorMessage,
+                      style: textTheme.bodySmall?.copyWith(color: colors.error),
+                    ),
                 ],
               ),
             )

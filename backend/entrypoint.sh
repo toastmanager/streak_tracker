@@ -1,4 +1,4 @@
 #!/bin/bash
 
-yarn prisma db push
-yarn start:prod
+yarn prisma db push --accept-data-loss 
+yarn start:prod 

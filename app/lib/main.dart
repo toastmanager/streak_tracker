@@ -13,10 +13,10 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 
-String appDocPath = "";
+String appDocPath = '';
 
 void main() async {
-  await dotenv.load(fileName: ".env");
+  await dotenv.load(fileName: '.env');
   appDocPath = (await getApplicationDocumentsDirectory()).path;
   await configureDependencies();
   await initializeDateFormatting('ru_RU');

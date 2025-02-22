@@ -1,10 +1,15 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { Prisma, Role, User } from '@prisma/client';
+import { UserDto } from './dto/user.dto';
+import { AvatarsStorage } from './avatars.storage';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly avatarsStorage: AvatarsStorage,
+  ) {}
 
   async create(args?: Prisma.UserCreateArgs) {
     const user = await this.prisma.user.create(args);
@@ -34,6 +39,26 @@ export class UsersService {
   async remove(args?: Prisma.UserDeleteArgs) {
     const user = await this.prisma.user.delete(args);
     return user;
+  }
+
+  async userWithRelatedData(args?: { user: User }): Promise<UserDto> {
+    const { user } = args;
+    const avatarUrl = await this.avatarsStorage.getUrl({
+      objectKey: user.id.toString(),
+    });
+    return {
+      ...user,
+      avatarUrl,
+    };
+  }
+
+  async usersWithRelatedData(args?: { users: User[] }): Promise<UserDto[]> {
+    const { users } = args;
+    let res: UserDto[] = [];
+    for (const user of users) {
+      res.push(await this.userWithRelatedData({ user: user }));
+    }
+    return res;
   }
 
   async checkUserRolesExistence(roles: Role[], id: number): Promise<boolean> {
