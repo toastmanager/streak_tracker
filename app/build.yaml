@@ -14,3 +14,4 @@ targets:
           default_values_map:
             - type_name: integer
               default_value: "int"
+          multipart_file_type: String

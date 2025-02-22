@@ -80,15 +80,15 @@ final class _$RestApi extends RestApi {
   }
 
   @override
-  Future<Response<PutAvatarImageResponseDto>> _apiV1UsersIdAvatarPut({
+  Future<Response<PutAvatarResponseDto>> _apiV1UsersIdAvatarPut({
     required String? id,
-    required PutAvatarDto body,
+    String? file,
   }) {
     final Uri $url = Uri.parse('/api/v1/users/${id}/avatar');
     final List<PartValue> $parts = <PartValue>[
-      PartValue<PutAvatarDto>(
-        'body',
-        body,
+      PartValueFile<String?>(
+        'file',
+        file,
       )
     ];
     final Request $request = Request(
@@ -98,28 +98,17 @@ final class _$RestApi extends RestApi {
       parts: $parts,
       multipart: true,
     );
-    return client
-        .send<PutAvatarImageResponseDto, PutAvatarImageResponseDto>($request);
+    return client.send<PutAvatarResponseDto, PutAvatarResponseDto>($request);
   }
 
   @override
-  Future<Response<DeleteAvatarResponseDto>> _apiV1UsersIdAvatarDelete({
-    required String? id,
-    required DeleteAvatarDto body,
-  }) {
+  Future<Response<DeleteAvatarResponseDto>> _apiV1UsersIdAvatarDelete(
+      {required String? id}) {
     final Uri $url = Uri.parse('/api/v1/users/${id}/avatar');
-    final List<PartValue> $parts = <PartValue>[
-      PartValue<DeleteAvatarDto>(
-        'body',
-        body,
-      )
-    ];
     final Request $request = Request(
       'DELETE',
       $url,
       client.baseUrl,
-      parts: $parts,
-      multipart: true,
     );
     return client
         .send<DeleteAvatarResponseDto, DeleteAvatarResponseDto>($request);
@@ -207,14 +196,47 @@ final class _$RestApi extends RestApi {
   }
 
   @override
-  Future<Response<UserDto>> _apiV1AuthMePost() {
+  Future<Response<UserSensitiveDto>> _apiV1AuthMePost() {
     final Uri $url = Uri.parse('/api/v1/auth/me');
     final Request $request = Request(
       'POST',
       $url,
       client.baseUrl,
     );
-    return client.send<UserDto, UserDto>($request);
+    return client.send<UserSensitiveDto, UserSensitiveDto>($request);
+  }
+
+  @override
+  Future<Response<UserSensitiveDto>> _apiV1AuthMePut(
+      {required UpdateMeDto? body}) {
+    final Uri $url = Uri.parse('/api/v1/auth/me');
+    final $body = body;
+    final Request $request = Request(
+      'PUT',
+      $url,
+      client.baseUrl,
+      body: $body,
+    );
+    return client.send<UserSensitiveDto, UserSensitiveDto>($request);
+  }
+
+  @override
+  Future<Response<String>> _apiV1AuthMeAvatarPut({String? file}) {
+    final Uri $url = Uri.parse('/api/v1/auth/me/avatar');
+    final List<PartValue> $parts = <PartValue>[
+      PartValueFile<String?>(
+        'file',
+        file,
+      )
+    ];
+    final Request $request = Request(
+      'PUT',
+      $url,
+      client.baseUrl,
+      parts: $parts,
+      multipart: true,
+    );
+    return client.send<String, String>($request);
   }
 
   @override

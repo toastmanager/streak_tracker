@@ -20,9 +20,4 @@ export class CreateUserDto {
   @IsOptional()
   @IsBoolean()
   isActive?: boolean = true;
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsString()
-  avatarKey?: string;
 }

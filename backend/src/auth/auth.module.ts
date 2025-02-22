@@ -8,6 +8,7 @@ import { AuthConfig } from './auth.config';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { RefreshTokensService } from './refresh-tokens/refresh-tokens.service';
 import { PrismaService } from 'src/prisma.service';
+import { AvatarsStorage } from '../users/avatars.storage';
 
 @Module({
   imports: [
@@ -24,6 +25,12 @@ import { PrismaService } from 'src/prisma.service';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy, RefreshTokensService, PrismaService],
+  providers: [
+    AuthService,
+    JwtStrategy,
+    RefreshTokensService,
+    PrismaService,
+    AvatarsStorage,
+  ],
 })
 export class AuthModule {}

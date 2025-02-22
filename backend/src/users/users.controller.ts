@@ -13,22 +13,26 @@ import {
   NotFoundException,
   UploadedFile,
   UseInterceptors,
+  BadRequestException,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Roles } from 'src/auth/decorators/roles.decorator';
-import { Role, User } from '@prisma/client';
+import { Role } from '@prisma/client';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { ApiBearerAuth, ApiConsumes, ApiOkResponse } from '@nestjs/swagger';
-import { PutAvatarImageResponseDto as PutAvatarResponseDto } from './dto/put-avatar-response.dto';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiOkResponse,
+} from '@nestjs/swagger';
+import { PutAvatarResponseDto } from './dto/put-avatar-response.dto';
 import { RoleDto } from './dto/role.dto';
 import { AvatarsStorage } from './avatars.storage';
 import { DeleteAvatarResponseDto } from './dto/delete-avatar-response.dto';
 import { UserDto } from './dto/user.dto';
-import { PutAvatarDto } from './dto/put-avatar.dto';
-import { DeleteAvatarDto } from './dto/delete-avatar.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('users')
@@ -152,28 +156,35 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('file'))
+  @ApiBody({
+    required: true,
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
   @ApiOkResponse({
     type: PutAvatarResponseDto,
   })
   async putAvatarImage(
     @Param('id') id: string,
     @UploadedFile() file: Express.Multer.File,
-    @Body() _: PutAvatarDto,
   ): Promise<PutAvatarResponseDto> {
-    try {
-      await this.avatarsStorage.update({
-        objectKey: id,
-        file: file.buffer,
-      });
-      return {
-        isUpdated: true,
-      };
-    } catch (error) {
-      console.error(error);
-      return {
-        isUpdated: false,
-      };
+    if (file === undefined) {
+      throw new BadRequestException('Given file is empty');
     }
+    await this.avatarsStorage.update({
+      objectKey: id,
+      file: file.buffer,
+    });
+    return {
+      isUpdated: true,
+    };
   }
 
   @Delete(':id/avatar')
@@ -185,7 +196,6 @@ export class UsersController {
   })
   async deleteAvatarImage(
     @Param('id') id: string,
-    @Body() _: DeleteAvatarDto,
   ): Promise<DeleteAvatarResponseDto> {
     const isDeleted = await this.avatarsStorage.delete({
       objectKey: id,

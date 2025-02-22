@@ -20,7 +20,7 @@ mixin _$AuthState {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(UserDto user) authorized,
+    required TResult Function(UserSensitiveDto user) authorized,
     required TResult Function() unauthorized,
     required TResult Function(String message) error,
   }) =>
@@ -29,7 +29,7 @@ mixin _$AuthState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(UserDto user)? authorized,
+    TResult? Function(UserSensitiveDto user)? authorized,
     TResult? Function()? unauthorized,
     TResult? Function(String message)? error,
   }) =>
@@ -38,7 +38,7 @@ mixin _$AuthState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(UserDto user)? authorized,
+    TResult Function(UserSensitiveDto user)? authorized,
     TResult Function()? unauthorized,
     TResult Function(String message)? error,
     required TResult orElse(),
@@ -137,7 +137,7 @@ class _$InitialImpl implements _Initial {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(UserDto user) authorized,
+    required TResult Function(UserSensitiveDto user) authorized,
     required TResult Function() unauthorized,
     required TResult Function(String message) error,
   }) {
@@ -149,7 +149,7 @@ class _$InitialImpl implements _Initial {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(UserDto user)? authorized,
+    TResult? Function(UserSensitiveDto user)? authorized,
     TResult? Function()? unauthorized,
     TResult? Function(String message)? error,
   }) {
@@ -161,7 +161,7 @@ class _$InitialImpl implements _Initial {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(UserDto user)? authorized,
+    TResult Function(UserSensitiveDto user)? authorized,
     TResult Function()? unauthorized,
     TResult Function(String message)? error,
     required TResult orElse(),
@@ -260,7 +260,7 @@ class _$LoadingImpl implements _Loading {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(UserDto user) authorized,
+    required TResult Function(UserSensitiveDto user) authorized,
     required TResult Function() unauthorized,
     required TResult Function(String message) error,
   }) {
@@ -272,7 +272,7 @@ class _$LoadingImpl implements _Loading {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(UserDto user)? authorized,
+    TResult? Function(UserSensitiveDto user)? authorized,
     TResult? Function()? unauthorized,
     TResult? Function(String message)? error,
   }) {
@@ -284,7 +284,7 @@ class _$LoadingImpl implements _Loading {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(UserDto user)? authorized,
+    TResult Function(UserSensitiveDto user)? authorized,
     TResult Function()? unauthorized,
     TResult Function(String message)? error,
     required TResult orElse(),
@@ -346,7 +346,7 @@ abstract class _$$AuthorizedImplCopyWith<$Res> {
           _$AuthorizedImpl value, $Res Function(_$AuthorizedImpl) then) =
       __$$AuthorizedImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({UserDto user});
+  $Res call({UserSensitiveDto user});
 }
 
 /// @nodoc
@@ -368,7 +368,7 @@ class __$$AuthorizedImplCopyWithImpl<$Res>
       user: null == user
           ? _value.user
           : user // ignore: cast_nullable_to_non_nullable
-              as UserDto,
+              as UserSensitiveDto,
     ));
   }
 }
@@ -379,7 +379,7 @@ class _$AuthorizedImpl implements _Authorized {
   const _$AuthorizedImpl({required this.user});
 
   @override
-  final UserDto user;
+  final UserSensitiveDto user;
 
   @override
   String toString() {
@@ -410,7 +410,7 @@ class _$AuthorizedImpl implements _Authorized {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(UserDto user) authorized,
+    required TResult Function(UserSensitiveDto user) authorized,
     required TResult Function() unauthorized,
     required TResult Function(String message) error,
   }) {
@@ -422,7 +422,7 @@ class _$AuthorizedImpl implements _Authorized {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(UserDto user)? authorized,
+    TResult? Function(UserSensitiveDto user)? authorized,
     TResult? Function()? unauthorized,
     TResult? Function(String message)? error,
   }) {
@@ -434,7 +434,7 @@ class _$AuthorizedImpl implements _Authorized {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(UserDto user)? authorized,
+    TResult Function(UserSensitiveDto user)? authorized,
     TResult Function()? unauthorized,
     TResult Function(String message)? error,
     required TResult orElse(),
@@ -487,9 +487,10 @@ class _$AuthorizedImpl implements _Authorized {
 }
 
 abstract class _Authorized implements AuthState {
-  const factory _Authorized({required final UserDto user}) = _$AuthorizedImpl;
+  const factory _Authorized({required final UserSensitiveDto user}) =
+      _$AuthorizedImpl;
 
-  UserDto get user;
+  UserSensitiveDto get user;
 
   /// Create a copy of AuthState
   /// with the given fields replaced by the non-null parameter values.
@@ -541,7 +542,7 @@ class _$UnauthorizedImpl implements _Unauthorized {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(UserDto user) authorized,
+    required TResult Function(UserSensitiveDto user) authorized,
     required TResult Function() unauthorized,
     required TResult Function(String message) error,
   }) {
@@ -553,7 +554,7 @@ class _$UnauthorizedImpl implements _Unauthorized {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(UserDto user)? authorized,
+    TResult? Function(UserSensitiveDto user)? authorized,
     TResult? Function()? unauthorized,
     TResult? Function(String message)? error,
   }) {
@@ -565,7 +566,7 @@ class _$UnauthorizedImpl implements _Unauthorized {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(UserDto user)? authorized,
+    TResult Function(UserSensitiveDto user)? authorized,
     TResult Function()? unauthorized,
     TResult Function(String message)? error,
     required TResult orElse(),
@@ -691,7 +692,7 @@ class _$ErrorImpl implements _Error {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(UserDto user) authorized,
+    required TResult Function(UserSensitiveDto user) authorized,
     required TResult Function() unauthorized,
     required TResult Function(String message) error,
   }) {
@@ -703,7 +704,7 @@ class _$ErrorImpl implements _Error {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(UserDto user)? authorized,
+    TResult? Function(UserSensitiveDto user)? authorized,
     TResult? Function()? unauthorized,
     TResult? Function(String message)? error,
   }) {
@@ -715,7 +716,7 @@ class _$ErrorImpl implements _Error {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(UserDto user)? authorized,
+    TResult Function(UserSensitiveDto user)? authorized,
     TResult Function()? unauthorized,
     TResult Function(String message)? error,
     required TResult orElse(),

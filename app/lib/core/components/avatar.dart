@@ -14,6 +14,12 @@ class Avatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = ColorScheme.of(context);
+    final avatarIcon = Icon(
+      Icons.person_rounded,
+      color: colors.onSurfaceVariant,
+      size: size / 1.5,
+    );
+
     return ClipOval(
       child: Container(
         color: colors.brightness == Brightness.dark
@@ -24,13 +30,11 @@ class Avatar extends StatelessWidget {
         child: avatarUrl != null
             ? CachedNetworkImage(
                 imageUrl: avatarUrl!,
+                errorWidget: (context, url, error) => avatarIcon,
+                placeholder: (context, url) => avatarIcon,
                 fit: BoxFit.cover,
               )
-            : Icon(
-                Icons.person_rounded,
-                color: colors.onSurfaceVariant,
-                size: size / 1.5,
-              ),
+            : avatarIcon,
       ),
     );
   }

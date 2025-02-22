@@ -126,14 +126,14 @@ abstract class RestApi extends ChopperService {
 
   ///
   ///@param id
-  Future<chopper.Response<PutAvatarImageResponseDto>> apiV1UsersIdAvatarPut({
+  Future<chopper.Response<PutAvatarResponseDto>> apiV1UsersIdAvatarPut({
     required String? id,
-    required PutAvatarDto body,
+    String? file,
   }) {
-    generatedMapping.putIfAbsent(PutAvatarImageResponseDto,
-        () => PutAvatarImageResponseDto.fromJsonFactory);
+    generatedMapping.putIfAbsent(
+        PutAvatarResponseDto, () => PutAvatarResponseDto.fromJsonFactory);
 
-    return _apiV1UsersIdAvatarPut(id: id, body: body);
+    return _apiV1UsersIdAvatarPut(id: id, file: file);
   }
 
   ///
@@ -143,31 +143,26 @@ abstract class RestApi extends ChopperService {
     optionalBody: true,
   )
   @Multipart()
-  Future<chopper.Response<PutAvatarImageResponseDto>> _apiV1UsersIdAvatarPut({
+  Future<chopper.Response<PutAvatarResponseDto>> _apiV1UsersIdAvatarPut({
     @Path('id') required String? id,
-    @Part() required PutAvatarDto body,
+    @PartFile() String? file,
   });
 
   ///
   ///@param id
-  Future<chopper.Response<DeleteAvatarResponseDto>> apiV1UsersIdAvatarDelete({
-    required String? id,
-    required DeleteAvatarDto body,
-  }) {
+  Future<chopper.Response<DeleteAvatarResponseDto>> apiV1UsersIdAvatarDelete(
+      {required String? id}) {
     generatedMapping.putIfAbsent(
         DeleteAvatarResponseDto, () => DeleteAvatarResponseDto.fromJsonFactory);
 
-    return _apiV1UsersIdAvatarDelete(id: id, body: body);
+    return _apiV1UsersIdAvatarDelete(id: id);
   }
 
   ///
   ///@param id
   @Delete(path: '/api/v1/users/{id}/avatar')
-  @Multipart()
-  Future<chopper.Response<DeleteAvatarResponseDto>> _apiV1UsersIdAvatarDelete({
-    @Path('id') required String? id,
-    @Part() required DeleteAvatarDto body,
-  });
+  Future<chopper.Response<DeleteAvatarResponseDto>> _apiV1UsersIdAvatarDelete(
+      {@Path('id') required String? id});
 
   ///
   ///@param id
@@ -270,8 +265,9 @@ abstract class RestApi extends ChopperService {
   Future<chopper.Response<Object>> _apiV1AuthLogoutPost();
 
   ///
-  Future<chopper.Response<UserDto>> apiV1AuthMePost() {
-    generatedMapping.putIfAbsent(UserDto, () => UserDto.fromJsonFactory);
+  Future<chopper.Response<UserSensitiveDto>> apiV1AuthMePost() {
+    generatedMapping.putIfAbsent(
+        UserSensitiveDto, () => UserSensitiveDto.fromJsonFactory);
 
     return _apiV1AuthMePost();
   }
@@ -281,7 +277,38 @@ abstract class RestApi extends ChopperService {
     path: '/api/v1/auth/me',
     optionalBody: true,
   )
-  Future<chopper.Response<UserDto>> _apiV1AuthMePost();
+  Future<chopper.Response<UserSensitiveDto>> _apiV1AuthMePost();
+
+  ///
+  Future<chopper.Response<UserSensitiveDto>> apiV1AuthMePut(
+      {required UpdateMeDto? body}) {
+    generatedMapping.putIfAbsent(
+        UserSensitiveDto, () => UserSensitiveDto.fromJsonFactory);
+
+    return _apiV1AuthMePut(body: body);
+  }
+
+  ///
+  @Put(
+    path: '/api/v1/auth/me',
+    optionalBody: true,
+  )
+  Future<chopper.Response<UserSensitiveDto>> _apiV1AuthMePut(
+      {@Body() required UpdateMeDto? body});
+
+  ///
+  Future<chopper.Response<String>> apiV1AuthMeAvatarPut({String? file}) {
+    return _apiV1AuthMeAvatarPut(file: file);
+  }
+
+  ///
+  @Put(
+    path: '/api/v1/auth/me/avatar',
+    optionalBody: true,
+  )
+  @Multipart()
+  Future<chopper.Response<String>> _apiV1AuthMeAvatarPut(
+      {@PartFile() String? file});
 
   ///
   Future<chopper.Response<AuthToken>> apiV1AuthRefreshPost() {

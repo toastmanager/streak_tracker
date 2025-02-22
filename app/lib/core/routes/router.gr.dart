@@ -108,7 +108,7 @@ class MainRoute extends _i5.PageRouteInfo<void> {
 class ProfileRoute extends _i5.PageRouteInfo<ProfileRouteArgs> {
   ProfileRoute({
     _i6.Key? key,
-    required _i7.UserDto user,
+    required _i7.UserSensitiveDto user,
     List<_i5.PageRouteInfo>? children,
   }) : super(
           ProfileRoute.name,
@@ -141,7 +141,7 @@ class ProfileRouteArgs {
 
   final _i6.Key? key;
 
-  final _i7.UserDto user;
+  final _i7.UserSensitiveDto user;
 
   @override
   String toString() {

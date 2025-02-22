@@ -61,21 +61,21 @@ export abstract class StorageRepository {
   }): Promise<string> {
     if (args.generateFilename === undefined) args.generateFilename = false;
 
-    let filename = args.filename;
+    let objectKey = args.filename;
     if (args.generateFilename === true) {
-      filename = filename.replace(/[^a-zA-Z0-9]/g, '');
-      filename = `${randomUUID()}-${filename}`;
+      objectKey = objectKey.replace(/[^a-zA-Z0-9]/g, '');
+      objectKey = `${randomUUID()}-${objectKey}`;
     }
 
     try {
       await this.s3Client.send(
         new PutObjectCommand({
           Bucket: this.bucketName,
-          Key: filename,
+          Key: objectKey,
           Body: args.file,
         }),
       );
-      return filename;
+      return objectKey;
     } catch (error) {
       throw error;
     }
