@@ -3,6 +3,7 @@ import { PrismaService } from 'src/prisma.service';
 import { Prisma, Role, User } from '@prisma/client';
 import { UserDto } from './dto/user.dto';
 import { AvatarsStorage } from './avatars.storage';
+import { UserSensitiveDto } from './dto/user-sensitive.dto';
 
 @Injectable()
 export class UsersService {
@@ -31,7 +32,7 @@ export class UsersService {
     return user;
   }
 
-  async update(args?: Prisma.UserUpdateArgs) {
+  async update(args?: Prisma.UserUpdateArgs): Promise<User> {
     const user = await this.prisma.user.update(args);
     return user;
   }
@@ -41,7 +42,7 @@ export class UsersService {
     return user;
   }
 
-  async userWithRelatedData(args?: { user: User }): Promise<UserDto> {
+  async userWithRelatedData(args?: { user: User }) {
     const { user } = args;
     const avatarUrl = await this.avatarsStorage.getUrl({
       objectKey: user.id.toString(),
