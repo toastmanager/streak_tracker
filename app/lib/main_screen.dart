@@ -37,9 +37,9 @@ class MainScreen extends StatelessWidget {
                   },
                   items: [
                     BottomNavigationBarItem(
-                        label: 'Activities', icon: Icon(Icons.local_activity)),
+                        label: 'Привычки', icon: Icon(Icons.local_activity)),
                     BottomNavigationBarItem(
-                        label: 'Profile', icon: Icon(Icons.person_rounded)),
+                        label: 'Профиль', icon: Icon(Icons.person_rounded)),
                   ],
                 ),
               );
