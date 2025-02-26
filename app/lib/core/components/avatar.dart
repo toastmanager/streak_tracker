@@ -4,12 +4,9 @@ import 'package:flutter/material.dart';
 class Avatar extends StatelessWidget {
   final double size;
   final String? avatarUrl;
+  final String? cacheKey;
 
-  const Avatar({
-    super.key,
-    this.size = 24,
-    this.avatarUrl,
-  });
+  const Avatar({super.key, this.size = 24, this.avatarUrl, this.cacheKey});
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +30,7 @@ class Avatar extends StatelessWidget {
                 errorWidget: (context, url, error) => avatarIcon,
                 placeholder: (context, url) => avatarIcon,
                 fit: BoxFit.cover,
+                cacheKey: cacheKey ?? avatarUrl!,
               )
             : avatarIcon,
       ),

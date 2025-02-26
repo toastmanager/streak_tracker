@@ -1,8 +1,10 @@
 import 'package:app/features/auth/domain/repositories/auth_repository.dart';
+import 'package:app/features/auth/domain/repositories/users_repository.dart';
 import 'package:app/generated_code/rest_api.models.swagger.dart';
 import 'package:bloc/bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:logger/logger.dart';
 
 part 'auth_state.dart';
 part 'auth_cubit.freezed.dart';
@@ -10,8 +12,14 @@ part 'auth_cubit.freezed.dart';
 @injectable
 class AuthCubit extends Cubit<AuthState> {
   final AuthRepository authRepository;
+  final UsersRepository usersRepository;
+  final Logger logger;
 
-  AuthCubit({required this.authRepository}) : super(AuthState.initial());
+  AuthCubit({
+    required this.authRepository,
+    required this.usersRepository,
+    required this.logger,
+  }) : super(AuthState.initial());
 
   Future<void> intialLoadMe() async {
     try {
@@ -70,5 +78,24 @@ class AuthCubit extends Cubit<AuthState> {
         AuthState.error(message: 'Не удалось выйти из аккаунта'),
       );
     }
+  }
+
+  Future<void> update(UpdateMeDto form, String? avatarPath) async {
+    final updatedUser = await authRepository.updateMe(form, avatarPath);
+    emit(AuthState.authorized(user: updatedUser));
+  }
+
+  Future<void> removeAvatar() async {
+    final user = state.whenOrNull(authorized: (user) => user);
+    if (user == null) {
+      throw Exception('Не удалось получить пользователя');
+    }
+    final _ = await usersRepository.clearAvatar(user.id);
+    final updatedUser = user.copyWith(avatarUrl: '');
+    emit(AuthState.authorized(user: updatedUser));
+  }
+
+  void setUser(UserSensitiveDto user) async {
+    emit(AuthState.authorized(user: user));
   }
 }

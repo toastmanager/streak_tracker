@@ -14,7 +14,6 @@ import 'package:app/features/habits/presentation/screens/habit_details_screen.da
     as _i1;
 import 'package:app/features/habits/presentation/screens/habit_list_screen.dart'
     as _i2;
-import 'package:app/generated_code/rest_api.models.swagger.dart' as _i7;
 import 'package:app/main_screen.dart' as _i3;
 import 'package:auto_route/auto_route.dart' as _i5;
 import 'package:flutter/material.dart' as _i6;
@@ -105,17 +104,10 @@ class MainRoute extends _i5.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i4.ProfileScreen]
-class ProfileRoute extends _i5.PageRouteInfo<ProfileRouteArgs> {
-  ProfileRoute({
-    _i6.Key? key,
-    required _i7.UserSensitiveDto user,
-    List<_i5.PageRouteInfo>? children,
-  }) : super(
+class ProfileRoute extends _i5.PageRouteInfo<void> {
+  const ProfileRoute({List<_i5.PageRouteInfo>? children})
+      : super(
           ProfileRoute.name,
-          args: ProfileRouteArgs(
-            key: key,
-            user: user,
-          ),
           initialChildren: children,
         );
 
@@ -124,27 +116,7 @@ class ProfileRoute extends _i5.PageRouteInfo<ProfileRouteArgs> {
   static _i5.PageInfo page = _i5.PageInfo(
     name,
     builder: (data) {
-      final args = data.argsAs<ProfileRouteArgs>();
-      return _i4.ProfileScreen(
-        key: args.key,
-        user: args.user,
-      );
+      return const _i4.ProfileScreen();
     },
   );
-}
-
-class ProfileRouteArgs {
-  const ProfileRouteArgs({
-    this.key,
-    required this.user,
-  });
-
-  final _i6.Key? key;
-
-  final _i7.UserSensitiveDto user;
-
-  @override
-  String toString() {
-    return 'ProfileRouteArgs{key: $key, user: $user}';
-  }
 }

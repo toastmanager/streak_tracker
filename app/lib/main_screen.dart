@@ -19,7 +19,7 @@ class MainScreen extends StatelessWidget {
           authorized: (user) => AutoTabsRouter(
             routes: [
               const HabitsListRoute(),
-              ProfileRoute(user: user),
+              ProfileRoute(),
             ],
             builder: (context, child) {
               final tabsRouter = AutoTabsRouter.of(context);

@@ -70,8 +70,11 @@ extension GetItInjectableX on _i174.GetIt {
           authTokenService: gh<_i250.AuthTokenService>(),
           logger: gh<_i974.Logger>(),
         ));
-    gh.factory<_i709.AuthCubit>(
-        () => _i709.AuthCubit(authRepository: gh<_i1015.AuthRepository>()));
+    gh.factory<_i709.AuthCubit>(() => _i709.AuthCubit(
+          authRepository: gh<_i1015.AuthRepository>(),
+          usersRepository: gh<_i736.UsersRepository>(),
+          logger: gh<_i974.Logger>(),
+        ));
     return this;
   }
 }

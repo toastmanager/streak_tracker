@@ -39,9 +39,13 @@ class UsersRepositoryImpl implements UsersRepository {
   }
 
   @override
-  Future<bool> clearAvatar(int id) {
-    // TODO: implement clearAvatar
-    throw UnimplementedError();
+  Future<bool> clearAvatar(int id) async {
+    final response = await restApi.apiV1UsersIdAvatarDelete(id: id.toString());
+    if (response.error != null) {
+      logger.e(response.error);
+      return false;
+    }
+    return response.body!.isDeleted;
   }
 
   @override
