@@ -14,7 +14,6 @@ import {
   UseInterceptors,
   UploadedFile,
   BadRequestException,
-  InternalServerErrorException,
   ConflictException,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
@@ -29,11 +28,9 @@ import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { UsersService } from 'src/users/users.service';
 import { AuthToken } from './dto/auth-token.dto';
-import { UserDto } from 'src/users/dto/user.dto';
 import { UpdateMeDto } from './dto/update-me.dto';
 import { AvatarsStorage } from '../users/avatars.storage';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { PutAvatarResponseDto } from '../users/dto/put-avatar-response.dto';
 import { Prisma } from '@prisma/client';
 import { UserSensitiveDto } from '../users/dto/user-sensitive.dto';
 
@@ -97,7 +94,7 @@ export class AuthController {
   @ApiOkResponse({
     type: UserSensitiveDto,
   })
-  async me(@Request() req: any) {
+  async me(@Request() req: any): Promise<UserSensitiveDto> {
     const { user } = req;
     return await this.usersService.userWithRelatedData({
       user: await this.usersService.findUnique({
