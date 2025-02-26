@@ -1,3 +1,5 @@
+name: Nest.js CD
+
 on:
   push:
     branches:
