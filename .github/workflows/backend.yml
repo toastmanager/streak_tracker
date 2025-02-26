@@ -1,4 +1,7 @@
 on:
+  pull_request:
+    branches:
+      - main
   push:
     branches:
       - main
@@ -7,6 +10,7 @@ jobs:
   test:
     name: Run tests and try to build
     runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js
@@ -22,6 +26,7 @@ jobs:
   deploy:
     name: Deploy to VPS via SSH
     runs-on: ubuntu-latest
+    if: github.event_name == 'push'
     needs: [test]
     steps:
       - name: connect and pull

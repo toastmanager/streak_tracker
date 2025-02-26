@@ -2,10 +2,14 @@
     email example@example.com
 }
 
-example.com {
-    reverse_proxy backend
+api.example.com {
+    reverse_proxy backend:8000
+}
+
+storage.example.com/admin {
+    reverse_proxy storage:9001
 }
 
 storage.example.com {
-    reverse_proxy backend
+    reverse_proxy storage:9000
 }
