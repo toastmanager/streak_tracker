@@ -8,9 +8,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./app
     steps:
       - uses: actions/checkout@v4
       
@@ -20,12 +17,15 @@ jobs:
           channel: 'stable'
 
       - name: Install dependencies
+        working-directory: ./app
         run: flutter pub get
         
       - name: Create .env file
+        working-directory: ./app
         run: echo "API_BASE_URL=${{ secrets.API_BASE_URL }}" > .env
 
       - name: Build APK
+        working-directory: ./app
         run: flutter build apk
 
       - name: Send APK to server
@@ -34,6 +34,6 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "./build/app/outputs/flutter-apk/app-release.apk"
+          source: "./app/build/app/outputs/flutter-apk/*"
           target: ${{ secrets.WORK_DIR }}/site/
           
