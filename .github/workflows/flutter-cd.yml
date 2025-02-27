@@ -36,4 +36,5 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: "./app/build/app/outputs/flutter-apk/*"
           target: ${{ secrets.WORK_DIR }}/backend/site/
-          
+          strip_components: 5
+          overwrite: true
