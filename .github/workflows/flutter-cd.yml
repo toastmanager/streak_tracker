@@ -34,6 +34,6 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "build/app/outputs/flutter-apk/app-release.apk"
+          source: "./build/app/outputs/flutter-apk/app-release.apk"
           target: ${{ secrets.WORK_DIR }}/site/
           
